@@ -1,0 +1,30 @@
+{
+  "name": "WarGame",
+  "version": "1.0.0",
+  "description": "Versão em JavaScript (Node.Js) do jogo de tabuleiro WAR",
+  "scripts": {
+    "postinstall": "bower install && gulp",
+    "postupdate": "bower update && gulp",
+    "test": "echo Não existe isso"
+  },
+  "keywords": [
+    "war",
+    "risc",
+    "ia",
+    "boardgame",
+    "javascript",
+    "js"
+  ],
+  "author": [
+    "Lucas dos Santos Abreu <lucas.s.abreu@gmail.com>",
+    "Fabrício Felisbino <fabricio.felisbino@outlook.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "gulp-util": "^3.0.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "node-webkit-builder": "^1.0.11"
+  }
+}

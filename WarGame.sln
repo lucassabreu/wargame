@@ -1,31 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2A95570-E5A5-4FFF-AC8D-3AA14991C6A5}"
-	ProjectSection(SolutionItems) = preProject
-		index.html = index.html
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{45FDF43A-2395-4A99-AC55-31882ED4789B}"
-	ProjectSection(SolutionItems) = preProject
-		js\app.js = js\app.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{960A4706-155D-46D1-9A47-122D7006D5FE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{6C08FFFF-0C4A-4444-91FF-87A4FD07773D}"
-	ProjectSection(SolutionItems) = preProject
-		css\style.css = css\style.css
-	EndProjectSection
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "WarGame", "WarGame\WarGame.njsproj", "{39EFB150-49C7-4106-B245-8A85A5747C32}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39EFB150-49C7-4106-B245-8A85A5747C32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39EFB150-49C7-4106-B245-8A85A5747C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39EFB150-49C7-4106-B245-8A85A5747C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39EFB150-49C7-4106-B245-8A85A5747C32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{45FDF43A-2395-4A99-AC55-31882ED4789B} = {A2A95570-E5A5-4FFF-AC8D-3AA14991C6A5}
-		{960A4706-155D-46D1-9A47-122D7006D5FE} = {A2A95570-E5A5-4FFF-AC8D-3AA14991C6A5}
-		{6C08FFFF-0C4A-4444-91FF-87A4FD07773D} = {A2A95570-E5A5-4FFF-AC8D-3AA14991C6A5}
 	EndGlobalSection
 EndGlobal

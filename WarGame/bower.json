@@ -1,0 +1,34 @@
+{
+  "name": "WarGame",
+  "version": "1.0.0",
+  "homepage": "https://github.com/lucassabreu/wargame",
+  "authors": [
+    "Lucas dos Santos Abreu <lucas.s.abreu@gmail.com>",
+    "Fabrício Felisbino <fabricio.felisbino@outlook.com>"
+  ],
+  "description": "Versão em JavaScript (Node.Js) do jogo de tabuleiro WAR",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "war",
+    "risc",
+    "ia",
+    "boardgame",
+    "javascript",
+    "js"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src/app/js/3d-party",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "angularjs": "~1.3.15"
+  }
+}

@@ -1,1 +1,7 @@
 node_modules/
+build/
+cache/
+WarGame/node_modules/
+WarGame/build/
+WarGame/cache/
+WarGame/src/app/js/3d-party/
