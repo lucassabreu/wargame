@@ -33,25 +33,31 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="src\app\css\styles.css" />
+    <Content Include="src\app\data\warclassic\map.svg" />
     <Content Include="src\app\images\icon.icns" />
     <Content Include="src\app\images\icon.ico" />
-    <Content Include="src\app\images\risk.svg" />
     <Content Include="src\app\images\worldHigh.svg" />
     <Content Include="src\app\images\worldLow.svg" />
     <Content Include="src\app\index.html" />
-    <Content Include="src\app\maps.json" />
+    <Content Include="src\app\data\warclassic\data.json" />
     <Content Include="src\app\package.json" />
+    <Content Include="src\app\routes\main.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
     <Folder Include="src\app\" />
     <Folder Include="src\app\css\" />
+    <Folder Include="src\app\data\warclassic\" />
     <Folder Include="src\app\images\" />
     <Folder Include="src\app\js\" />
+    <Folder Include="src\app\data\" />
+    <Folder Include="src\app\routes\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\app\js\app.js" />
     <Compile Include="src\app\js\controllers.js" />
+    <Compile Include="src\app\js\main.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

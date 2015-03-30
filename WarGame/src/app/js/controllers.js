@@ -1,6 +1,6 @@
-﻿var controllers = angular.modules("warGameControllers");
+﻿var controllers = angular.module("warGameControllers", []);
 
-controllers.controller("warGameMenuCtrl", [
+controllers.controller("MainCtrl", [
     "$scope",
     function ($scope) {
 

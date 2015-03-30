@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="warGameMain">
+<html ng-app="warGameApp">
 <head>
 
     <meta charset="utf-8">
@@ -7,18 +7,18 @@
 
     <title>WarGame</title>
 
-    <link rel="stylesheet" href="./css/jquery.flipster.min.css">
     <link rel="stylesheet" href="./css/styles.css">
 
 </head>
 <body>
 
-    <div ng-controller="warGameMenuCtrl"></div>
-
-    <div ng-view></div>
+    <div class="app-container" ng-view></div>
     
     <script src="./js/3d-party/jquery/dist/jquery.min.js"></script>
     <script src="./js/3d-party/angularjs/angular.min.js"></script>
+    <script src="./js/3d-party/angular-route/angular-route.min.js"></script>
+    <script src="./js/main.js"></script>
     <script src="./js/app.js"></script>
+    <script src="./js/controllers.js"></script>
 </body>
 </html>

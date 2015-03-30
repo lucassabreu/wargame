@@ -1,4 +1,3 @@
 {
-    "directory": "src/app/js/3d-party",
-    "strict-ssl": false
+    "directory": "src/app/js/3d-party"
 }

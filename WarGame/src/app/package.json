@@ -6,11 +6,11 @@
   "window": {
 		"title": "War Game",
 		"icon": "images/icon.png",
-		"toolbar": false,
+		"toolbar": true,
 		"frame": true,
-		"min_width": 960,
-		"min_height": 520,
-		"resizable": true,
+		"width": 960,
+		"height": 520,
+		"resizable": false,
 		"position": "center"
 	},
   "keywords": [
