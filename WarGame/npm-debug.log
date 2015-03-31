@@ -1,0 +1,57 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@2.5.1
+3 info using node@v0.12.1
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 warn package.json WarGame@1.0.0 No repository field.
+6 verbose install where, deps [ 'C:\\Users\\fabricio\\OneDrive - DOMO SOLUCOES EM T.I-\\Documentos2\\WarGame\\WarGame',
+6 verbose install   [ 'gulp-util', 'gulp', 'node-webkit-builder' ] ]
+7 verbose install where, peers [ 'C:\\Users\\fabricio\\OneDrive - DOMO SOLUCOES EM T.I-\\Documentos2\\WarGame\\WarGame',
+7 verbose install   [] ]
+8 info preinstall WarGame@1.0.0
+9 verbose already installed skipping gulp-util@^3.0.4 C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame
+10 verbose already installed skipping gulp@^3.8.11 C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame
+11 verbose already installed skipping node-webkit-builder@^1.0.11 C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame
+12 silly install resolved []
+13 info build C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame
+14 verbose linkStuff [ false,
+14 verbose linkStuff   false,
+14 verbose linkStuff   false,
+14 verbose linkStuff   'C:\\Users\\fabricio\\OneDrive - DOMO SOLUCOES EM T.I-\\Documentos2\\WarGame' ]
+15 info linkStuff WarGame@1.0.0
+16 verbose linkBins WarGame@1.0.0
+17 verbose linkMans WarGame@1.0.0
+18 verbose rebuildBundles WarGame@1.0.0
+19 verbose rebuildBundles [ '.bin', 'gulp', 'gulp-util', 'node-webkit-builder' ]
+20 info install WarGame@1.0.0
+21 info postinstall WarGame@1.0.0
+22 verbose unsafe-perm in lifecycle true
+23 info WarGame@1.0.0 Failed to exec postinstall script
+24 verbose stack Error: WarGame@1.0.0 postinstall: `bower install && gulp`
+24 verbose stack Exit status 1
+24 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:213:16)
+24 verbose stack     at EventEmitter.emit (events.js:110:17)
+24 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:14:12)
+24 verbose stack     at ChildProcess.emit (events.js:110:17)
+24 verbose stack     at maybeClose (child_process.js:1008:16)
+24 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1080:5)
+25 verbose pkgid WarGame@1.0.0
+26 verbose cwd C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame
+27 error Windows_NT 6.3.9600
+28 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+29 error node v0.12.1
+30 error npm  v2.5.1
+31 error code ELIFECYCLE
+32 error WarGame@1.0.0 postinstall: `bower install && gulp`
+32 error Exit status 1
+33 error Failed at the WarGame@1.0.0 postinstall script 'bower install && gulp'.
+33 error This is most likely a problem with the WarGame package,
+33 error not with npm itself.
+33 error Tell the author that this fails on your system:
+33 error     bower install && gulp
+33 error You can get their info via:
+33 error     npm owner ls WarGame
+33 error There is likely additional logging output above.
+34 verbose exit [ 1, true ]
