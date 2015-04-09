@@ -1,0 +1,15 @@
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bin\Debug\ReverseMap\resources.pri
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bin\Debug\AppxManifest.xml
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bin\Debug\WarGame.build.appxrecipe
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\priconfig.xml
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\priconfig.xml.intermediate
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\layout.resfiles
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\layout.resfiles.intermediate
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\resources.resfiles
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\resources.resfiles.intermediate
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\pri.resfiles
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\pri.resfiles.intermediate
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\qualifiers.txt
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\qualifiers.txt.intermediate
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\fabricio\OneDrive - DOMO SOLUCOES EM T.I-\Documentos2\WarGame\WarGame\WarGame\bld\Debug\ProjectArchitectures.txt
