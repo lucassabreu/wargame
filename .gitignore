@@ -4,5 +4,5 @@ cache/
 WarGame/node_modules/
 WarGame/build/
 WarGame/cache/
-WarGame/src/app/js/3d-party/
+WarGame/src/app/3d-party/
 /WarGame/.ntvs_analysis.dat.tmp
