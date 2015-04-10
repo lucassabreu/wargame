@@ -21,6 +21,9 @@
             $scope.maps = [];
             
             var mapService = App.ServiceFactory.getService('map_service');
+            $scope.maps = mapService.getMapsInfo();
+
+            console.log($scope.maps);
         }
     ]);
     

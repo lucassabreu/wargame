@@ -31,6 +31,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".bowerrc" />
+    <Content Include="bower.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="src\app\css\styles.css" />
@@ -60,10 +62,13 @@
     <Folder Include="src\app\routes\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gulpfile.js" />
     <Compile Include="src\app\js\app.js" />
     <Compile Include="src\app\js\controllers.js" />
-    <Compile Include="src\app\js\models\army.js" />
-    <Compile Include="src\app\js\models\map_model_type.js" />
+    <Compile Include="src\app\js\main.js" />
+    <Compile Include="src\app\js\models\Army.js" />
+    <Compile Include="src\app\js\models\MapInfo.js" />
+    <Compile Include="src\app\js\models\MapModelType.js" />
     <Compile Include="src\app\js\services\local\map_service_local.js" />
     <Compile Include="src\app\js\services\service_factory.js" />
     <Compile Include="src\app\main.js" />

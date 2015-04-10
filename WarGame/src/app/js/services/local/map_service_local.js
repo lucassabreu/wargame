@@ -16,11 +16,14 @@
 
             if (this._mapsInfo.length == 0) {
                 
-                var that = this;
                 var files = fs.readdirSync("./data");
+                var map = null;
 
                 for (var key in files) {
-                    this._mapsInfo.push(require('./data/' + files[key] + '/info.json'));
+                    map = require('./data/' + files[key] + '/info.json');
+                    this._mapsInfo.push(
+                        new App.Models.MapInfo(files[key], map.name, map.description)
+                    );
                 }
             }
             
