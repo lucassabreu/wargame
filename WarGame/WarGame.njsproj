@@ -52,12 +52,16 @@
     <Folder Include="src\app\images\" />
     <Folder Include="src\app\js\" />
     <Folder Include="src\app\data\" />
+    <Folder Include="src\app\js\models\" />
     <Folder Include="src\app\routes\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\app\js\app.js" />
     <Compile Include="src\app\js\controllers.js" />
     <Compile Include="src\app\js\main.js" />
+    <Compile Include="src\app\js\models\Continent.js" />
+    <Compile Include="src\app\js\models\GoalCard.js" />
+    <Compile Include="src\app\js\models\Territory.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
