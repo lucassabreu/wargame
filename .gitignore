@@ -1,6 +1,8 @@
 node_modules/
 build/
 cache/
+WarGame/npm-debug.log
+WarGame/.ntvs_analysis.dat
 WarGame/node_modules/
 WarGame/build/
 WarGame/cache/

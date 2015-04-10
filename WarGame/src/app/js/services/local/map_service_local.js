@@ -20,16 +20,7 @@
                 var files = fs.readdirSync("./data");
 
                 for (var key in files) {
-
                     this._mapsInfo.push(require('./data/' + files[key] + '/info.json'));
-
-                    fs.readFile('./data/' + files[key] + '/info.json', 'iso88591', function (err, json) {
-                        if (!err) {
-                            json = json.replace(/(\n\t)/g, '');
-                            that._mapsInfo.push(JSON.parse(json.replace(/\n/g, '')));
-                        } else
-                            throw err;
-                    });
                 }
             }
             
