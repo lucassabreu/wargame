@@ -5,7 +5,7 @@ WarGame/node_modules/
 WarGame/build/
 WarGame/obj
 WarGame/cache/
-WarGame/src/app/js/3d-party/
+WarGame/src/app/3d-party
 WarGame/npm-debug.log
 WarGame/.ntvs_analysis.dat
 WarGame/.ntvs_analysis.dat.tmp
