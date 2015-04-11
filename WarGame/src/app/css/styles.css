@@ -48,8 +48,13 @@ ul.options li a {
     display: block;
     
     text-decoration: none;
+    cursor: pointer;
 
     color: #fff;
     background-color: #555;
     padding: .5em;
+}
+
+ul.options li a:hover {
+    background-color: #7e7e7e;
 }
