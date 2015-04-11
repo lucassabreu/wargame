@@ -69,8 +69,8 @@
     <Compile Include="src\app\js\models\Army.js" />
     <Compile Include="src\app\js\models\MapInfo.js" />
     <Compile Include="src\app\js\models\MapModelType.js" />
-    <Compile Include="src\app\js\services\local\map_service_local.js" />
-    <Compile Include="src\app\js\services\service_factory.js" />
+    <Compile Include="src\app\js\services\local\MapServiceLocal.js" />
+    <Compile Include="src\app\js\services\ServiceFactory.js" />
     <Compile Include="src\app\main.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
