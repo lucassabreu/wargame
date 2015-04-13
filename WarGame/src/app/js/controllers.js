@@ -27,6 +27,20 @@
         }
     ]);
     
+    controllers.controller('PlayMapCtrl', [
+        '$scope', '$routeParams', 
+        function ($scope, $routeParams) {
+            
+            var mapId = $routeParams['map'];
+            var gameService = App.ServiceFactory.getService("game_service");
+
+            $scope.game = gameService.startGame(mapId);
+            $scope.armyColor = '';
+
+
+        }
+    ]);
+    
     App.angular.controllers = controllers;
 
 }) (window.App);

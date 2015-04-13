@@ -2,75 +2,159 @@
 	"continents" : [
 		{ "name" : "Africa", "bonusArmy" : 3,
             "territories": [ 
-                {"name" : "East Africa", "query" : "#EastAfrica"},
-                {"name" : "Egypt", "query" : "#Egypt"},
-                {"name" : "Congo", "query" : "#Congo"},
-                {"name" : "Madagascar", "query" : "#Madagascar"},
-                {"name" : "South Africa", "query" : "#SouthAfrica"},
-                {"name" : "North Africa", "query" : "#NorthAfrica"}
+                {"name" : "East Africa", "query" : "#EastAfrica", "neighbors" : [
+					"Middle East", "Egypt", "North Africa", "Congo", "South Africa", "Madagascar"
+				]},
+                {"name" : "Egypt", "query" : "#Egypt", "neighbors" : [
+					"Middle East", "Southern Europe", "North Africa", "East Africa"
+				]},
+                {"name" : "Congo", "query" : "#Congo", "neighbors" : [
+					"East Africa", "North Africa", "South Africa" 
+				]},
+                {"name" : "Madagascar", "query" : "#Madagascar", "neighbors" : [
+					"East Africa", "South Africa"
+				]},
+                {"name" : "South Africa", "query" : "#SouthAfrica", "neighbors" : [
+					"Madagascar", "Congo", "East Africa"
+				]},
+                {"name" : "North Africa", "query" : "#NorthAfrica", "neighbors" : [
+					"East Africa", "Egypt", "Southern Europe", "Western Europe", "Brazil", "Congo"
+				]}
             ]
         }, 
 		{ "name" : "Asia", "bonusArmy" : 7,
             "territories": [ 
-                {"name" : "Afghanistan", "query" : "#Afghanistan"} ,
-                {"name" : "India", "query" : "#India"},
-                {"name" : "Irkutsk", "query" : "#Irkutsk"},
-                {"name" : "Kamchatka", "query" : "#Kamchatka"},
-                {"name" : "Middle East", "query" : "#MiddleEast"},
-                {"name" : "Mongolia", "query" : "#Mongolia"},
-                {"name" : "Siam", "query" : "#Siam"},
-                {"name" : "China", "query" : "#China"},
-                {"name" : "Japan", "query" : "#Japan"},
-                {"name" : "Siberia", "query" : "#Siberia"},
-                {"name" : "Ural", "query" : "#Ural"},
-                {"name" : "Yakutsk", "query" : "#Yakutsk"}
+                {"name" : "Afghanistan", "query" : "#Afghanistan", "neighbors" : [
+					"China", "Ural", "Ukraine", "Middle East"
+				]} ,
+                {"name" : "India", "query" : "#India", "neighbors" : [
+					"Siam", "China", "Afghanistan", "Middle East"
+				]},
+                {"name" : "Irkutsk", "query" : "#Irkutsk", "neighbors" : [
+					"Kamchatka", "Yakutsk", "Siberia", "Mongolia"
+				]},
+                {"name" : "Kamchatka", "query" : "#Kamchatka", "neighbors" : [
+					"Alaska", "Yakutsk", "Irkutsk", "Mongolia", "Japan"
+				]},
+                {"name" : "Middle East", "query" : "#MiddleEast", "neighbors" : [
+					"India", "Afghanistan", "Ukraine", "Southern Europe", "Egypt", "East Africa"
+				]},
+                {"name" : "Mongolia", "query" : "#Mongolia", "neighbors" : [
+					"Japan", "Kamchatka", "Irkutsk", "Siberia", "China"
+				]},
+                {"name" : "Siam", "query" : "#Siam", "neighbors" : [
+					"Indonesia", "China", "India"
+				]},
+                {"name" : "China", "query" : "#China", "neighbors" : [
+					"Mongolia", "Siberia", "Ural", "Afghanistan", "India", "Siam"
+				]},
+                {"name" : "Japan", "query" : "#Japan", "neighbors" : [
+					"Kamchatka", "Mongolia"
+				]},
+                {"name" : "Siberia", "query" : "#Siberia", "neighbors" : [
+					"Mongolia", "Irkutsk", "Yakutsk", "Ural", "China"
+				]},
+                {"name" : "Ural", "query" : "#Ural", "neighbors" : [
+					"Siberia", "Ukraine", "Afghanistan", "China"
+				]},
+                {"name" : "Yakutsk", "query" : "#Yakutsk", "neighbors" : [
+					"Kamchatka", "Siberia", "Irkutsk"
+				]}
             ]
         },
-		{ "name" : "Australia", "bonusArmy" : 2, 
+		{ "name" : "Austrailia", "bonusArmy" : 2, 
             "territories": [ 
-                {"name" : "Eastern Austrailia", "query" : "#EasternAustrailia"},
-                {"name" : "New Guniea", "query" : "#NewGuniea"},
-                {"name" : "Western Austrailia", "query" : "#WesternAustrailia"},
-                {"name" : "Indonesia", "query" : "#Indonesia"}
+                {"name" : "Eastern Austrailia", "query" : "#EasternAustrailia", "neighbors" : [
+					"New Guniea", "Western Austrailia"
+				]},
+                {"name" : "New Guniea", "query" : "#NewGuniea", "neighbors" : [
+					"Indonesia", "Western Austrailia"
+				]},
+                {"name" : "Western Austrailia", "query" : "#WesternAustrailia", "neighbors" : [
+					"Eastern Austrailia", "New Guniea", "Indonesia"
+				]},
+                {"name" : "Indonesia", "query" : "#Indonesia", "neighbors" : [
+					"New Guniea", "Siam", "Western Austrailia"
+				]}
             ]
         },
 		{ "name" : "Europe", "bonusArmy" : 5, 
             "territories": [ 
-                {"name" : "Great Britain", "query" : "#GreatBritain"},
-                {"name" : "Iceland", "query" : "#Iceland"},
-                {"name" : "Northern Europe", "query" : "#NorthernEurope"},
-                {"name" : "Scandinavia", "query" : "#Scandinavia"},
-                {"name" : "Southern Europe", "query" : "#SouthernEurope"},
-                {"name" : "Ukraine", "query" : "#Ukraine"},
-                {"name" : "Western Europe", "query" : "#WesternEurope"}
+                {"name" : "Great Britain", "query" : "#GreatBritain", "neighbors" : [
+					"Northern Europe", "Scandinavia", "Iceland", "Western Europe"
+				]},
+                {"name" : "Iceland", "query" : "#Iceland", "neighbors" : [
+					"Scandinavia", "Greenland", "Great Britain"
+				]},
+                {"name" : "Northern Europe", "query" : "#NorthernEurope", "neighbors" : [
+					"Ukraine", "Scandinavia", "Great Britain", "Western Europe", "Southern Europe"
+				]},
+                {"name" : "Scandinavia", "query" : "#Scandinavia", "neighbors" : [
+					"Ukraine", "Iceland", "Great Britain"
+				]},
+                {"name" : "Southern Europe", "query" : "#SouthernEurope", "neighbors" : [
+					"Middle East", "Ukraine", "Northern Europe", "Western Europe"
+				]},
+                {"name" : "Ukraine", "query" : "#Ukraine", "neighbors" : [
+					"Afghanistan", "Ural", "Scandinavia", "Northern Europe", "Southern Europe", "Middle East"
+				]},
+                {"name" : "Western Europe", "query" : "#WesternEurope", "neighbors" : [
+					"Southern Europe", "Northern Europe", "Great Britain", "North Africa"
+				]}
             ]
         },
 		{ "name" : "North America", "bonusArmy" : 5, 
             "territories": [ 
-                {"name" : "Alaska", "query" : "#Alaska"},
-                {"name" : "Alberta", "query" : "#Alberta"},
-                {"name" : "Central America", "query" : "#CentralAmerica"},
-                {"name" : "Eastern United States", "query" : "#EasternUnitedStates"},
-                {"name" : "Greenland", "query" : "#Greenland"},
-                {"name" : "Northwest Territory", "query" : "#NorthwestTerritory"},
-                {"name" : "Ontario", "query" : "#Ontario"},
-                {"name" : "Western United States", "query" : "#WesternUnitedStates"},
-                {"name" : "Quebec", "query" : "#Quebec"}
+                {"name" : "Alaska", "query" : "#Alaska", "neighbors" : [
+					"Alberta", "Northwest Territory", "Kamchatka"
+				]},
+                {"name" : "Alberta", "query" : "#Alberta", "neighbors" : [
+					"Ontario", "Northwest Territory", "Alaska", "Western United States"
+				]},
+                {"name" : "Central America", "query" : "#CentralAmerica", "neighbors" : [
+					"Eastern United States", "Western United States", "Venezuela"
+				]},
+                {"name" : "Eastern United States", "query" : "#EasternUnitedStates", "neighbors" : [
+					"Quebec", "Ontario", "Western United States", "Central America"
+				]},
+                {"name" : "Greenland", "query" : "#Greenland", "neighbors" : [
+					"Iceland", "Northwest Territory", "Quebec"
+				]},
+                {"name" : "Northwest Territory", "query" : "#NorthwestTerritory", "neighbors" : [
+					"Greenland", "Alaska", "Alberta", "Ontario"
+				]},
+                {"name" : "Ontario", "query" : "#Ontario", "neighbors" : [
+					"Quebec", "Northwest Territory", "Alberta", "Western United States", "Eastern United States"
+				]},
+                {"name" : "Western United States", "query" : "#WesternUnitedStates", "neighbors" : [
+					"Eastern United States", "Ontario", "Alberta", "Central America"
+				]},
+                {"name" : "Quebec", "query" : "#Quebec", "neighbors" : [
+					"Greenland", "Northwest Territory", "Ontario", "Eastern United States"
+				]}
             ]
         },
 		{ "name" : "South America", "bonusArmy" : 2, 
             "territories": [ 
-                {"name" : "Argentina", "query" : "#Argentina"},
-                {"name" : "Brazil", "query" : "#Brazil"},
-                {"name" : "Peru", "query" : "#Peru"},
-                {"name" : "Venezuela", "query" : "#Venezuela"}
+                {"name" : "Argentina", "query" : "#Argentina", "neighbors" : [
+					"Brazil", "Peru"
+				]},
+                {"name" : "Brazil", "query" : "#Brazil", "neighbors" : [
+					"North Africa", "Venezuela", "Peru", "Argentina"
+				]},
+                {"name" : "Peru", "query" : "#Peru", "neighbors" : [
+					"Brazil", "Venezuela", "Argentina"
+				]},
+                {"name" : "Venezuela", "query" : "#Venezuela", "neighbors" : [
+					"Central America", "Peru", "Brazil"
+				]}
             ]
         }
 	],
 	"goalCards" : [
 		{ "goalText" : "Conquistar na totalidade a EUROPA, a OCEANIA e mais um terceiro.", "goals" : [
 			{"type" : "conquerContinent", "continent" : "Europe"},
-			{"type" : "conquerContinent", "continent" : "Australia"},
+			{"type" : "conquerContinent", "continent" : "Austrailia"},
 			{"type" : "conquerOtherContinents", "quantity" : 1, "armyAtEachOne" : 1}
 		]}, 
 		{ "goalText" : "Conquistar na totalidade a ASIA e a AMÉRICA DO SUL.", "goals" : [
@@ -87,54 +171,50 @@
 			{"type" : "conquerContinent", "continent" : "Africa"}
 		]}, 
 		{ "goalText" : "Conquistar na totalidade a AMÉRICA DO NORTE e a ÁFRICA." , "goals" : [
-			{"type" : "conquerContinent", "continent" : "NorthAmerica"},
+			{"type" : "conquerContinent", "continent" : "North America"},
 			{"type" : "conquerContinent", "continent" : "Africa"}
 		]}, 
 		{ "goalText" : "Conquistar na totalidade a AMÉRICA DO NORTE e a OCEANIA." , "goals" : [
-			{"type" : "conquerContinent", "continent" : "NorthAmerica"},
-			{"type" : "conquerContinent", "continent" : "Australia"}
+			{"type" : "conquerContinent", "continent" : "North America"},
+			{"type" : "conquerContinent", "continent" : "Austrailia"}
 		]}, 
 		{ "goalText" : "Conquistar 18 TERRITÓRIOS e ocupar cada um deles com pelo menos dois exércitos." , "goals" : [
 			{"type" : "conquerAnyTerritories", "quantity" : 18, "armyAtEachOne" : 2}
-		]}, 
-		{ "goalText" : "Conquistar 24 TERRITÓRIOS à sua escolha." , "goals" : [
-			{"type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1}
-		]}, 
+		]},
 		{ "goalText" : "Destruir totalmente OS EXÉRCITOS AZUIS.",
-            "otherWiseText" : "Caso você possua os AZUIS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "blue", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}, 
-		{ "goalText" : "Destruir totalmente OS EXÉRCITOS AMARELOS.",
-            "otherWiseText" : "Caso você possua os AMARELOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "yellow", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}, 
-		{ "goalText" : "Destruir totalmente OS EXÉRCITOS VERMELHOS.",
-            "otherWiseText" : "Caso você possua os VERMELHOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "red", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}, 
-		{ "goalText" : "Destruir totalmente OS EXÉRCITOS PRETOS.",
-            "otherWiseText" : "Caso você possua os PRETOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "black", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}, 
-		{ "goalText" : "Destruir totalmente OS EXÉRCITOS BRANCOS.",
-            "otherWiseText" : "Caso você possua os BRANCOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "white", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}, 
-		{ "goalText" : "Destruir totalmente OS EXÉRCITOS VERDES.",
-            "otherWiseText" : "Caso você possua os VERDES, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , "goals" : [
-			{"type" : "destroyArmy", "army" : "green", 
-                "otherWise" : { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 }
-            }
-		]}
+            "otherwiseText" : "Caso você possua os AZUIS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "blue" } ], 
+            "otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+		}, 
+		{ 
+			"goalText" : "Destruir totalmente OS EXÉRCITOS AMARELOS.",
+            "otherwiseText" : "Caso você possua os AMARELOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "yellow"} ],
+            "otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+        }, 
+		{ 
+			"goalText" : "Destruir totalmente OS EXÉRCITOS VERMELHOS.",
+            "otherwiseText" : "Caso você possua os VERMELHOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "red" } ],
+            "otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+		}, 
+		{ 
+			"goalText" : "Destruir totalmente OS EXÉRCITOS PRETOS.",
+            "otherwiseText" : "Caso você possua os PRETOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "black" } ], 
+            "otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+		},
+		{ 
+			"goalText" : "Destruir totalmente OS EXÉRCITOS BRANCOS.",
+            "otherwiseText" : "Caso você possua os BRANCOS, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "white" } ],
+			"otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+		}, 
+		{ 
+			"goalText" : "Destruir totalmente OS EXÉRCITOS VERDES.",
+            "otherwiseText" : "Caso você possua os VERDES, estes não estejam no jogo, ou sejam eliminados por outro jogador, então você deve conquistar 24 territórios a sua escolha." , 
+			"goals" : [ {"type" : "destroyArmy", "army" : "green"} ], 
+			"otherwise" : [ { "type" : "conquerAnyTerritories", "quantity" : 24, "armyAtEachOne" : 1 } ]
+		}
 	]
 }

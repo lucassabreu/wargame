@@ -7,6 +7,7 @@
     }
     
     Territory.prototype = {
+        continent : null,
         name : '',
         query : '',
         neighbors : [],
@@ -20,5 +21,5 @@
         },
     }
 
-    App.Models.Territoty = Territory;
+    App.Models.Territory = Territory;
 })(window.App);

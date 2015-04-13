@@ -1,33 +1,26 @@
 ﻿(function (App) {
     
-    var MapTypeModel = function (id, jsonConfig) {
+    /**
+     * Keep the build instructions for a Map (all in JSON objects)
+     */ 
+     var MapModelType = function (id, name, description, continents, goalCards, mapImage) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+        this.continents = continents;
+        this.goalCards = goalCards;
+        this.image = mapImage;
     };
     
-    MapTypeModel.prototype = {
+    MapModelType.prototype = {
         id : null,
+        name : '',
+        description : '',
         continents : [],
-        territories : [],
-        map : null,
+        image : null,
         goalCards : [],
-        
-        /**
-         * Create a Map entity based on the model
-         **/
-        buildMap : function () {
-        }
     };
     
-    MapTypeModel.models = [];
-    
-    MapTypeModel.register = function (id, jsonConfig) {
-        return this.models[id] = new MapTypeModel(id, jsonConfig);
-    };
-    
-    MapTypeModel.get = function (id) {
-        return this.model[id];
-    };
-
-    App.Models.MapTypeModel = MapTypeModel;
+    App.Models.MapModelType = MapModelType;
 
 }) (window.App);
