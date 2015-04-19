@@ -1,3 +1,17 @@
-﻿<div>
+﻿<div class="play-map-container">
 
+    <div class="info">
+        <div class="army-color">
+            <label>Player Color: </label>
+            <span>{{player.armyColor}}</span>
+        </div>
+        <div class="map-name">
+            <label>Map Name: </label>
+            <span>{{map.name}}</span>
+        </div>
+    </div>
+
+    <div class="map-container" ng->
+        <svg id="svgMap" />
+    </div>
 </div>

@@ -16,12 +16,6 @@
     MapServiceLocal.prototype.getMapBuilder = function () {
         return this.app.MapBuilder;
     };
-    
-    MapServiceLocal.prototype.playMap = function (mapId) {
-
-
-
-    };
 
     MapServiceLocal.prototype.getMapsInfo = function () {
         

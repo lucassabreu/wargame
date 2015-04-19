@@ -1,13 +1,16 @@
 ﻿(function (App) {
-
+    'use strict';
+    
     var GameServiceLocal = function (App) {
         this.app = App;
+        this.history = [];
     };
 
     GameServiceLocal.prototype = {
         app : null,
         map : null,
-
+        game : null,
+        history : []
     };
     
     GameServiceLocal.prototype.__defineGetter__('playerService', function () {
@@ -21,6 +24,24 @@
     GameServiceLocal.prototype.startGame = function (mapId) {
         this.map = this.mapService.getMap(mapId);
 
+        this.game = new App.Models.Game(uuid.v1(), this.map.id);
+        
+        this.game.player = new App.Models.Player();
+        
+        var colors = App.ArmyColors.filter(function () { return true; });
+        
+        this.game.player.armyColor = colors[this._getRandom(colors.length)];
+
+        this.history.push(this.game);
+        return this.game;
+    };
+    
+    GameServiceLocal.prototype._getRandom = function (max) {
+        return Math.floor((Math.random() * max) + 1);
+    };
+    
+    GameServiceLocal.prototype.getCurrentGame = function () {
+        return this.game;
     };
     
     GameServiceLocal.prototype.getCurrentMap = function () {

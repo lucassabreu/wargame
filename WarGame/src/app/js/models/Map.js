@@ -1,8 +1,9 @@
 ﻿(function (App) {
-    var Map = function (name, continents, goalCards) {
+    var Map = function (name, continents, image, goalCards) {
         this.name = name;
         this.continents = continents;
         this.goalCards = goalCards;
+        this.image = image;
         
         this.territories = [];
         
@@ -21,7 +22,8 @@
         territories : [],
         continents : [],
         goalCards : [],
-        
+        image : '',
+
         __continentsMap : {},
         __territoriesMap : {}
     };
