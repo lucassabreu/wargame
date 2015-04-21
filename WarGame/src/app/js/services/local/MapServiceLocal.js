@@ -52,11 +52,11 @@
             
             return new App.Models.MapModelType(
                 mapId, 
-                    mapInfo.name, 
-                    mapInfo.description,
-                    mapData.continents,
-                    mapData.goalCards,
-                    './data/' + mapId + '/map.svg'
+                mapInfo.name, 
+                mapInfo.description,
+                mapData.continents,
+                mapData.goalCards,
+                './data/' + mapId + '/map.svg'
             );
         }
 
@@ -67,8 +67,12 @@
         var mapModelType = this.getMapModelType(mapId);
         
         return this.getMapBuilder().buildMap(mapModelType);
-    },
-        
+    };
+    
+    MapServiceLocal.prototype.getSVG = function (mapId) {
+        var svg = fs.readFileSync(this.getMapModelType(mapId).image, 'utf-8').trim();
+        return svg;
+    };
 
     App.ServiceFactory.register('map_service', new MapServiceLocal(App));
 

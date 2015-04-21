@@ -10,7 +10,6 @@
 		"frame": true,
 		"width": 960,
 		"height": 520,
-		"resizable": false,
 		"position": "center"
 	},
   "keywords": [

@@ -1,5 +1,6 @@
 ﻿(function (App) {
-    var Map = function (name, continents, image, goalCards) {
+    var Map = function (id, name, continents, image, goalCards) {
+        this.id = id;
         this.name = name;
         this.continents = continents;
         this.goalCards = goalCards;
@@ -18,6 +19,7 @@
     }
     
     Map.prototype = {
+        id : null,
         name : null,
         territories : [],
         continents : [],

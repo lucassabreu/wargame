@@ -14,7 +14,7 @@
     MapBuilder.prototype.buildMap = function (mapModelType) {
 
         var continents = this.__buildContinents(mapModelType.continents);
-        var map = new App.Models.Map(mapModelType.name, continents, mapModelType.image);
+        var map = new App.Models.Map(mapModelType.id, mapModelType.name, continents, mapModelType.image);
 
         var goalCards = this.__buildGoalCards(map, mapModelType.goalCards)
         map.goalCards = goalCards;

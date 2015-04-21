@@ -1,5 +1,6 @@
 ﻿var AppController = function () {
     this.Models = {};
+    this.Views = {};
     this.angular = {};
 };
 
@@ -10,7 +11,7 @@ AppController.ArmyColors = [
 AppController.prototype = {
     angular : null,
     Models : null,
-
+    Views : null,
 };
 
 AppController.prototype.__defineGetter__('ArmyColors', function () {

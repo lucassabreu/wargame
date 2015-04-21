@@ -36,10 +36,10 @@
         return this.game;
     };
     
-    GameServiceLocal.prototype._getRandom = function (max) {
-        return Math.floor((Math.random() * max) + 1);
+    GameServiceLocal.prototype.getSVG = function () {
+        return this.mapService.getSVG(this.map.id);
     };
-    
+
     GameServiceLocal.prototype.getCurrentGame = function () {
         return this.game;
     };
@@ -52,6 +52,10 @@
         return this.playerService.getPlayers();
     };
     
+    GameServiceLocal.prototype._getRandom = function (max) {
+        return Math.floor((Math.random() * max) + 1);
+    };
+
     App.ServiceFactory.register('game_service', new GameServiceLocal(App));
 
 })(window.App);

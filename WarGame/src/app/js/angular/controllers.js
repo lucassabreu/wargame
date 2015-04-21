@@ -22,8 +22,6 @@
             
             var mapService = App.ServiceFactory.getService('map_service');
             $scope.maps = mapService.getMapsInfo();
-
-            console.log($scope.maps);
         }
     ]);
     
@@ -39,10 +37,17 @@
 
             $scope.player = game.player;
             $scope.map = gameService.getCurrentMap();
-
+            
+            var svgContainer = angular.element("#svgContainer");
+            svgContainer.html(gameService.getSVG());
+            
+            $scope.mapView = new App.Views.MapView(svgContainer[0], $scope.map);
+            $scope.mapView.init();
         }
     ]);
     
     App.angular.controllers = controllers;
 
 })(window.App);
+
+var teste = null;

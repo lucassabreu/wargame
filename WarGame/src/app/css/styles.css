@@ -93,7 +93,7 @@ ul.options li a:hover {
     bottom : .5em;
 }
 
-.play-map-container .map-container img {
+.play-map-container .map-container svg {
     height: 100%;
     width: 100%;
 }
