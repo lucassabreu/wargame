@@ -8,6 +8,12 @@
 
     };
 
+    Command.Types = {
+        Place : 'Place',
+        Attack : 'Attack',
+        Move : 'Move',
+    };
+
     Command.prototype = {
         player : null,
         type : '',

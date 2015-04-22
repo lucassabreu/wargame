@@ -31,7 +31,7 @@
     };
     
     Map.prototype.getTerritory = function (territoryName) {
-        return this.__territoriesMap[continentName];
+        return this.__territoriesMap[territoryName];
     };
 
     Map.prototype.getContinent = function (continentName) {

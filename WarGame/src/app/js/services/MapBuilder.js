@@ -87,9 +87,10 @@
                     config[contKey].territories[terKey].name.trim(),
                     // only the string id list, not the atual territory
                     config[contKey].territories[terKey].neighbors, 
-                    config[contKey].territories[terKey].query.trim()
+                    config[contKey].territories[terKey].query.trim(),
+                    config[contKey].territories[terKey].center
                 );
-                
+
                 // map all the territories bu the name
                 allTerritories[territory.name] = territory;
                 contTerritories.push(territory);

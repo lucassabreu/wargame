@@ -1,15 +1,56 @@
 ﻿<div class="play-map-container">
 
     <div class="info">
-        <div class="army-color">
-            <label>Player Color: </label>
-            <span>{{player.armyColor}}</span>
+        <div class="player" ng-repeat="pl in game.players">
+            <label>Player Name: </label>
+            <span class="player-name">{{pl.name}}</span>
+         
+            <label>Army Color: </label>
+            <span class="player-color">{{pl.armyColor}}</span>
+         
+            <label>Number Of Armies: </label>
+            <span class="player-armies-number">{{pl.armies.length}}</span>
+
+            <label>Number Of Territories: </label>
+            <span class="player-territories-number">{{pl.territories.length}}</span>
         </div>
         <div class="map-name">
             <label>Map Name: </label>
             <span>{{map.name}}</span>
         </div>
+        <div class="info-turn">
+        </div>
     </div>
 
-    <div class="map-container" id="svgContainer"></div>
+    <div class="map-container">
+        <ul class="controls turn">
+            <li><a class="btn-show-card" ng-click="showCard()">Show Card</a></li>
+            <li><a class="btn-attack" ng-click="toogleAttack()">Attack</a></li>
+            <li><a class="btn-move" ng-click="toogleMove()">Move Army</a></li>
+            <li><a class="btn-end-turn" ng-click="endTurn()">End Turn</a></li>
+            <li><a class="btn-cancel" ng-click="cancel()" disabled>Cancel</a></li>
+        </ul>
+        <ul class="controls place-turn">
+            <li><a class="btn-show-card" ng-click="showCard()">Show Card</a></li>
+            <li><a class="btn-place-army" ng-click="placeArmy()">Place Army!</a></li>
+            <li><a class="btn-done" ng-click="placeTurnDone()" disabled>Done!</a></li>
+        </ul>
+        <div class="svg-container" id="svgContainer"></div>
+        <div class="messages">No messages...</div>
+    </div>
+
+    <div class="goal-card">
+        <div class="detail">
+            <label>Text: </label>
+            <p class="goal">{{player.goalCard.text}}</p>
+            <label>Otherwise: </label>
+            <p class="otherwise">{{player.goalCard.otherwiseText}}</p>
+
+            <a href="" ng-click="hideCard()">Hide</a>
+        </div>  
+    </div>
+
+    <div class="wait">
+        <div class="detail"> Waiting Others Players ... </div>
+    </div>
 </div>

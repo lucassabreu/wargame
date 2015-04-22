@@ -5,7 +5,7 @@
 };
 
 AppController.ArmyColors = [
-    'Black', 'Blue', 'Green', 'Whtie', 'Red', 'Yellow'
+    'Black', 'Blue', 'Green', 'White', 'Red', 'Yellow'
 ];
 
 AppController.prototype = {

@@ -40,28 +40,28 @@
     /**
      * Set/Get the player who has this GoalCard
      */
-    GoalCard.prototype.player = function (player) {
-        if (arguments.length == 0)
-            return this.__player;
-        else {
-            this.__player = player;
+    GoalCard.prototype.__defineSetter__('player', function (player) {
+        this.__player = player;
 
-            for (var key in this.goals) {
-                this.goals[key].player = player;
-            }
-
-            for (var key in this.otherwiseGoals) {
-                this.otherwiseGoals[key].player= player;
-            }
+        for (var key in this.goals) {
+            this.goals[key].player = player;
         }
-    };
+
+        for (var key in this.otherwiseGoals) {
+            this.otherwiseGoals[key].player = player;
+        }
+    });
+
+    GoalCard.prototype.__defineGetter__('player', function(){
+        return this.__player;
+    });
     
     /**
      * Verify the goals to confirm if the GoalCard has been completed
      */
-    GoalCard.prototype.completed = function () {
+    GoalCard.prototype.__defineGetter__('completed', function () {
         
-        if (this.player() == null || this.player().destroyed)
+        if (this.player == null || this.player.destroyed)
             return false;
         
         var goals;
@@ -77,7 +77,7 @@
         }
 
         return true;
-    };
+    });
     
     App.Models.GoalCard = GoalCard;
 })(window.App);

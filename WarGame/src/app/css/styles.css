@@ -4,8 +4,6 @@
 
     width : 100%;
     height: 100%;
-
-    overflow: hidden;
 }
 
 .app-container {
@@ -19,6 +17,8 @@
     font-family: Helvetica, Arial, sans-serif;
     background: #000000;
 }
+
+/* options */
 
 ul.options {
     position: absolute;
@@ -37,27 +37,53 @@ ul.options {
     list-style: none;
 }
 
-ul.options.centered li {
-    text-align: center;
-}
-
 ul.options li {
+    text-align: center;
     margin-bottom: .5em;
 }
 
 ul.options li a {
     display: block;
-    
+    padding: .5em;
+}
+
+/* controls */
+
+ul.controls {
+    padding: .25em;
+    border: 0;
+    margin: 0;
+    text-align: center;
+}
+
+ul.controls li,
+ul.controls li a {
+    display: inline-block;
+}
+
+ul.controls li a {
+    padding: .25em;
+}
+
+/* items */
+
+a {
+    padding: .25em;
     text-decoration: none;
     cursor: pointer;
 
     color: #fff;
     background-color: #555;
-    padding: .5em;
 }
 
-ul.options li a:hover {
+a:hover {
     background-color: #7e7e7e;
+}
+
+a[disabled] {
+    background: #444;
+    color: #7e7e7e;
+    cursor: default;
 }
 
 /*play-map-container */
@@ -76,24 +102,116 @@ ul.options li a:hover {
     font-family: monospace;
 }
 
-.play-map-container .info .color span {
-    text-shadow: 0 0 1px #fff;
-    font-weight: bolder;
+.play-map-container .info .player-name,
+.play-map-container .info .player-color,
+.play-map-container .info .player-armies-number,
+.play-map-container .info .player-territories-number {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.play-map-container .info .player-name {
+    width: 25ex;
+}
+
+.play-map-container .info .player-color {
+    width: 10ex;
+}
+
+.play-map-container .info .player-armies-number,
+.play-map-container .info .player-territories-number {
+    width: 6ex;
 }
 
 .play-map-container .map-container {
 
-    background: #fff;
-
     position: absolute;
 
-    top: 3em;
+    top: 5em;
     left: .5em;
     right: .5em;
     bottom : .5em;
 }
 
-.play-map-container .map-container svg {
-    height: 100%;
+.play-map-container .map-container ul.controls li a {
+    width: 10em;
+}
+
+.play-map-container .map-container .svg-container {
+    position: absolute;
+    top: 2.5em;
+    bottom: 1em;
     width: 100%;
+}
+
+.play-map-container .map-container .messages {
+    position: absolute;
+    bottom: 0;
+    height: 1em;
+    font-family: monospace;
+}
+
+/* goal card dialog */
+
+.play-map-container .goal-card {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background: black;
+}
+
+.play-map-container .goal-card .detail {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    width: 25em;
+
+    border: 2px solid #555;
+    padding: .5em;
+
+    transform: translate(-50%, -50%);
+}
+
+.play-map-container .goal-card .detail label {
+    font-weight: bold;
+}
+
+.play-map-container .goal-card .detail p {
+    margin-bottom: 1em;
+}
+
+.play-map-container .goal-card .detail a {
+    display: block;
+    text-align: center;
+}
+
+/* wait for */
+
+.play-map-container .wait {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background: rgba(0,0,0,.5);
+}
+
+.play-map-container .wait .detail {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    border: 2px solid #555;
+    padding: .5em;
+
+    font-size: 16pt;
+    background: black;
+
+    transform: translate(-50%, -50%);
 }
