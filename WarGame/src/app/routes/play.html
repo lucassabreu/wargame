@@ -13,12 +13,12 @@
 
             <label>Number Of Territories: </label>
             <span class="player-territories-number">{{pl.territories.length}}</span>
+
+            <a href="" class="btn" ng-click="showCard(pl)">Show Card</a>
         </div>
         <div class="map-name">
             <label>Map Name: </label>
             <span>{{map.name}}</span>
-        </div>
-        <div class="info-turn">
         </div>
     </div>
 
@@ -31,7 +31,7 @@
             <li><a class="btn-cancel" ng-click="cancel()" disabled>Cancel</a></li>
         </ul>
         <ul class="controls place-turn">
-            <li><a class="btn-show-card" ng-click="showCard()">Show Card</a></li>
+            <li><a class="btn-show-card" ng-click="showCard(player)">Show Card</a></li>
             <li><a class="btn-place-army" ng-click="placeArmy()">Place Army!</a></li>
             <li><a class="btn-done" ng-click="placeTurnDone()" disabled>Done!</a></li>
         </ul>
@@ -42,15 +42,78 @@
     <div class="goal-card">
         <div class="detail">
             <label>Text: </label>
-            <p class="goal">{{player.goalCard.text}}</p>
+            <p class="goal">{{goalCard.text}}</p>
             <label>Otherwise: </label>
-            <p class="otherwise">{{player.goalCard.otherwiseText}}</p>
+            <p class="otherwise">{{goalCard.otherwiseText}}</p>
 
-            <a href="" ng-click="hideCard()">Hide</a>
+            <a href="" class="btn" ng-click="hideCard()">Hide</a>
         </div>  
     </div>
 
     <div class="wait">
         <div class="detail"> Waiting Others Players ... </div>
+    </div>
+
+    <div class="attack">
+        <div class="detail">
+            <div class="from">
+                <label>From:</label>
+                <span>{{attack.from.name}} ({{attack.from.occupiedBy.name}})</span>
+            </div>
+            <div class="target">
+                <label>Target:</label>
+                <span>{{attack.target.name}} ({{attack.target.occupiedBy.name}})</span>
+            </div>
+            <div class="attack-properties">
+                <label>Using:</label>
+                <input ng-model="attack.quantity" min="1" max="{{attack.max}}" type="number" />
+                <span> armies</span>
+            </div>
+            <div class="buttons">
+                <a href="" ng-click="attackTerritory()" class="btn">Attack !</a>
+                <a href="" ng-click="closeAttack()" class="btn">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="moving">
+        <div class="detail">
+            <div class="from">
+                <label>From:</label>
+                <span>{{moving.from.name}}</span>
+            </div>
+            <div class="to">
+                <label>To:</label>
+                <span>{{moving.to.name}}</span>
+            </div>
+            <div class="moving-properties">
+                <label>Using:</label>
+                <input ng-model="moving.quantity" min="1" max="{{moving.max}}" type="number" />
+                <span> armies</span>
+            </div>
+            <div class="buttons">
+                <a href="" ng-click="movingArmies()" class="btn">Move !</a>
+                <a href="" ng-click="closeMoving()" class="btn">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="attack-result">
+        <div class="detail">
+
+            <div class="attack-dices">
+                <label>Attack Dices:</label>
+                <div class="die dice-{{dice.number}} {{dice.result}}" ng-repeat="dice in attack.result.attackDices"><span class="dot"></span></div>
+            </div>
+
+            <div class="defense-dices">
+                <label>Defense Dices:</label>
+                <div class="die dice-{{dice.number}} {{dice.result}}" ng-repeat="dice in attack.result.defenseDices"><span class="dot"></span></div>
+            </div>
+
+            <div class="result-text"></div>
+
+            <a href="" class="btn" ng-click="closeAttackResult()">Close</a>
+        </div>
     </div>
 </div>

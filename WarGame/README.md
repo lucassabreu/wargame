@@ -6,3 +6,8 @@ Detalhes
 --------
 
 * Linguagem: JavaScript (Node.js)
+
+Outros
+------
+
+* Dados por: Jonathan Sampson (http://sampsonblog.com/289/of-dice-dabblet-and-css)

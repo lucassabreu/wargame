@@ -2,20 +2,22 @@
     
     var MapView = function (mapContainer, gameEntity, mapEntity) {
 
-        teste = this;
+        mv = this;
 
         this.snap = new Snap(jQuery(mapContainer).find('svg')[0]);
         this.updateEntities(gameEntity, mapEntity);
 
         this._armies = [];
         this._attackTerritories = [];
+        this._moveTerritories = [];
 
         this.state = MapView.States.Placing;
         
         this.feedback = {
             overTerritory     : this.snap.select('#overTerritory'),
             attackTerritory   : this.snap.select('#attackTerritory'),
-            selectedTerritory : this.snap.select('#selectedTerritory')
+            selectedTerritory : this.snap.select('#selectedTerritory'),
+            moveTerritory     : this.snap.select('#moveTerritory'), 
         };
 
         this.armySample = this.snap.select("#armySample");
@@ -44,6 +46,7 @@
         _currentPlayer : null,
 
         _attackTerritories : [],
+        _moveTerritories : [],
         _armies : [],
 
         feedback : null,
@@ -54,6 +57,7 @@
 
         _lastOverAttackTerritory : null,
         _lastClickedAttackTerritory : null,
+        _lastClickedMoveTerritory : null,
 
     };
 
@@ -82,6 +86,19 @@
 
     MapView.prototype.__defineGetter__('hasActiveAttackTerritory', function(){
         return this.activeAttackTerritory != null;
+    });
+
+    // move help attributes
+
+    MapView.prototype.__defineGetter__('activeMoveTerritory', function(){
+        if (this._lastClickedMoveTerritory) {
+            return this._getTerritory(this._lastClickedMoveTerritory);
+        } else
+            return null;
+    });
+
+    MapView.prototype.__defineGetter__('hasActiveMoveTerritory', function(){
+        return this.activeMoveTerritory != null;
     });
 
     // state help attributes
@@ -122,6 +139,8 @@
 
     // methods for out call
 
+    // placing turn
+
     MapView.prototype.startPlacingFor = function(player){
         this.state = MapView.States.Placing;
 
@@ -133,22 +152,47 @@
         armyElement.select('.number-of-armies').node.textContent = territory.armies.length;
     };
 
+    // attack turn
+
     MapView.prototype.startAttackFrom = function(territory){
         this.state = MapView.States.Attacking;
         this._currentPlayer = territory.occupiedBy;
 
         this._selectTerritory(this._getById(territory.query));
-        this._clearAttackTerritories();
+        this._clearTerritoryHelpers();
 
         for(var key in territory.neighbors) {
-            this._createAttackTerritory(territory.neighbors[key]);
+            if (territory.neighbors[key].occupiedBy != territory.occupiedBy)
+                this._createAttackTerritory(territory.neighbors[key]);
         }
     };
 
-    MapView.prototype.cancelAttack = function(){
+    MapView.prototype.endAttack = function(){
         this.state = MapView.States.Selecting;
         this._clearAttackTerritories();
     };
+
+    // move turn
+
+    MapView.prototype.startMovingFrom = function (territory) {
+        this.state = MapView.States.Moving;
+        this._currentPlayer = territory.occupiedBy;
+
+        this._selectTerritory(this._getById(territory.query));
+        this._clearTerritoryHelpers();
+
+        for(var key in territory.neighbors) {
+            if (territory.neighbors[key].occupiedBy == territory.occupiedBy)
+                this._createMoveTerritory(territory.neighbors[key]);
+        }
+    };
+
+    MapView.prototype.endMoving = function(){
+        this.state = MapView.States.Selecting;
+        this._clearMoveTerritories();
+    };
+
+    // callback return
 
     MapView.prototype.updateEntities = function(gameEntity, mapEntity){
         this.game = gameEntity;
@@ -193,7 +237,11 @@
                 if(that.isAttacking) {
                     that.onClickAttackTerritory(evt, that._getById(element + '_attack'));
                 } else {
-                    that.onClickTerritory(evt, that._getById(element));
+                    if (that.isMoving) {
+                        that.onClickMoveTerritory(evt, that._getById(element + '_move'));
+                    } else {
+                        that.onClickTerritory(evt, that._getById(element));
+                    }
                 }
             });
 
@@ -204,11 +252,29 @@
         this.armySample.attr('visibility', 'hidden');
     };
 
+    // internal method helpers
+
     MapView.prototype._moveArmyElementTo = function(armyElement, territory){
         armyElement.transform(Snap.matrix().translate(territory.center.x, territory.center.y));
     };
 
-    // internal method helpers
+    MapView.prototype._createMoveTerritory = function (territory) {
+        var that = this;
+        var moveTerritory = this.feedback.moveTerritory.clone();
+        var territoryElement = this._getById(territory.query);
+
+        moveTerritory.attr({ 
+            id : territoryElement.attr('id') + '_move', 
+            d : territoryElement.attr('d'),
+            territoryName : territory.name
+        });
+
+        moveTerritory.click(function(evt){
+            that.onClickMoveTerritory(evt, this);
+        });
+
+        this._moveTerritories.push(moveTerritory);
+    };
 
     MapView.prototype._createAttackTerritory = function (territory) {
         var that = this;
@@ -233,6 +299,18 @@
         while(territoryElement = this._attackTerritories.pop()) {
             territoryElement.remove();
         }
+    };
+
+    MapView.prototype._clearMoveTerritories = function(){
+        var territoryElement;
+        while(territoryElement = this._moveTerritories.pop()) {
+            territoryElement.remove();
+        }
+    };
+
+    MapView.prototype._clearTerritoryHelpers = function(){
+        this._clearAttackTerritories();
+        this._clearMoveTerritories();
     };
 
     // attack territory events
@@ -263,9 +341,40 @@
         }
     };
 
+    // moving territory events
+
+    MapView.prototype._selectMoveTerritory = function(element){
+        // confirm that is the only one
+        this._cancelMoveTerritory();
+
+        this._lastClickedMoveTerritory = element;
+        this._lastClickedMoveTerritory.attr('opacity', '0.6');
+    };
+
+    MapView.prototype._cancelMoveTerritory = function(){
+        if (!this.hasActiveMoveTerritory)
+            return;
+
+        this._lastClickedMoveTerritory.attr('opacity', '0.3');
+        this._lastClickedMoveTerritory = null;
+    };
+    
+    MapView.prototype.onClickMoveTerritory = function(evt, element){
+        if (this.isMoving) {
+            if (this._lastClickedMoveTerritory
+                && this._lastClickedMoveTerritory.attr('territoryName') == element.attr('territoryName'))
+                this._cancelMoveTerritory();
+            else
+                this._selectMoveTerritory(element);
+        }
+    };
+
     // select territory events
 
     MapView.prototype._selectTerritory = function(territoryElement){
+        if (this._getTerritory(territoryElement).occupiedBy != this._currentPlayer)
+            return;
+
         this._lastClickedTerritory = territoryElement;
         this._lastOverTerritory = null;
         this.feedback.overTerritory.attr('d', '');
@@ -337,4 +446,4 @@
 
 })(window.App, window.Snap);
 
-var teste = null;
+var mv = null;

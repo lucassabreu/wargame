@@ -1,6 +1,6 @@
 ﻿(function (App) {
 
-    var ConquerContinentGoal = function (app, map, config) {
+    function ConquerContinentGoal (app, map, config) {
         
         this.app = app;
         this.map = map;

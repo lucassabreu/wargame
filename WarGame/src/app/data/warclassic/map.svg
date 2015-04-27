@@ -435,6 +435,12 @@
      stroke="red"
      opacity="0.3" />
   <path
+     id="moveTerritory"
+     fill="blue"
+     stroke-width="8"
+     stroke="blue"
+     opacity="0.3" />
+  <path
      id="selectedTerritory"
      fill="white"
      stroke-width="8"

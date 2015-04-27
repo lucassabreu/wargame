@@ -3,27 +3,30 @@
     var Game = function (id, mapId) {
         this.id = id;
         this.mapId = mapId;
-        this.otherPlayers = [];
+        this.players = [];
         this.armies = [];
+        this.state = null;
 
         this._armies = {};
+    };
+
+    Game.States = {
+        Placement : 'Placement',
+        Attacking : 'Attacking',
+        Ended : 'Ended',
     };
 
     Game.prototype = {
         id : '',
         mapId : null,
         player : null,
-        otherPlayers : [],
         armies : [],
+        winner : null,
+        completed : false,
+        state : null,
 
         _armies : {},
     };
-
-    Game.prototype.__defineGetter__('players', function(){
-        var players = this.otherPlayers.slice(0);
-        players.push(this.player);
-        return players;
-    });
 
     Game.prototype.getArmy = function(armyId){
         if (this._armies.hasOwnProperty(armyId))

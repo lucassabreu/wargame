@@ -18,3 +18,7 @@ Array.copy = function(array){
 Array.remove = function(index, array){
 	return array.splice(index, 1)[0];
 };
+
+Array.removeItem = function(item, array){
+	return array.splice(array.indexOf(item), 1)[0];
+};

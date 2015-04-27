@@ -24,6 +24,7 @@
         goals : [],
         otherwiseGoals : [],
 
+        completed : false,
         failed : false
     }﻿
     
@@ -36,6 +37,13 @@
         goal.goalCard = this;
         this.otherwiseGoals.push(goal);
     };
+
+    GoalCard.prototype.__defineGetter__('currentGoals', function(){
+        if (!this.failed)
+            return this.goals;
+        else
+            return this.otherwiseGoals;
+    });
     
     /**
      * Set/Get the player who has this GoalCard
@@ -56,28 +64,6 @@
         return this.__player;
     });
     
-    /**
-     * Verify the goals to confirm if the GoalCard has been completed
-     */
-    GoalCard.prototype.__defineGetter__('completed', function () {
-        
-        if (this.player == null || this.player.destroyed)
-            return false;
-        
-        var goals;
-        
-        if (this.failed == false)
-            goals = this.goals;
-        else
-            goals = this.otherwiseGoals;
-        
-        for (var key in goals) {
-            if (!goals[key].completed())
-                return false;
-        }
-
-        return true;
-    });
-    
     App.Models.GoalCard = GoalCard;
+
 })(window.App);

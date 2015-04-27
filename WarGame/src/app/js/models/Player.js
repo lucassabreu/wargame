@@ -10,6 +10,7 @@
         armyColor : '',
         _goalCard : null,
         armies : [],
+        real : false,
     };
     
     Player.prototype.__defineGetter__('territories', function(){
@@ -36,6 +37,10 @@
     Player.prototype.__defineGetter__('goalCard', function(){
         return this._goalCard;
     })
+
+    Player.prototype.__defineGetter__('completedGoals', function(){
+        return this.goalCard.completed;
+    });
 
     App.Models.Player = Player;
 

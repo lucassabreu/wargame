@@ -4,6 +4,14 @@
 
     width : 100%;
     height: 100%;
+
+    /* prevent text selection */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .app-container {
@@ -68,12 +76,16 @@ ul.controls li a {
 /* items */
 
 a {
-    padding: .25em;
     text-decoration: none;
     cursor: pointer;
 
     color: #fff;
     background-color: #555;
+}
+
+ul li a, a.btn {
+    display: inline-block;
+    padding: .25em;
 }
 
 a:hover {
@@ -160,7 +172,7 @@ a[disabled] {
     right: 0;
     left: 0;
 
-    background: black;
+    background: rgba(0,0,0,.5);
 }
 
 .play-map-container .goal-card .detail {
@@ -170,6 +182,7 @@ a[disabled] {
     left: 50%;
     width: 25em;
 
+    background: black;
     border: 2px solid #555;
     padding: .5em;
 
@@ -215,3 +228,146 @@ a[disabled] {
 
     transform: translate(-50%, -50%);
 }
+
+/* attack */
+
+.play-map-container .attack {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background: rgba(0,0,0,.5);
+}
+
+.play-map-container .attack .detail {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    border: 2px solid #555;
+    padding: .5em;
+    background: black;
+
+    font-family: monospace;
+    font-size: 12pt;
+
+    transform: translate(-50%, -50%);
+}
+
+.play-map-container .attack .detail input {
+    font-family: monospace;
+    font-size: 10pt;
+    width: 4em;
+    text-align: right;
+}
+
+.play-map-container .attack .detail label {
+    font-weight: bolder;
+}
+
+.play-map-container .attack .detail .buttons,
+.play-map-container .attack .detail .attack-properties {
+    margin-top: 1em;
+}
+
+.play-map-container .attack .detail a {
+    display: inline-block;
+    width: 10em;
+    text-align: center;
+}
+
+/* attack result dialog */
+
+.play-map-container .attack-result {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background: rgba(0,0,0,.5);
+}
+
+.play-map-container .attack-result .detail {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    width: 25em;
+
+    background: black;
+    border: 2px solid #555;
+    padding: .5em;
+
+    transform: translate(-50%, -50%);
+}
+
+.play-map-container .attack-result .detail label {
+    font-weight: bold;
+    display: block;
+}
+
+.play-map-container .attack-result .detail .attack-dices,
+.play-map-container .attack-result .detail .defense-dices {
+    margin-bottom: 1em;
+}
+
+.play-map-container .attack-result .detail a {
+    display: block;
+    text-align: center;
+}
+
+
+/* moving */
+
+.play-map-container .moving {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background: rgba(0,0,0,.5);
+}
+
+.play-map-container .moving .detail {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    border: 2px solid #555;
+    padding: .5em;
+    background: black;
+
+    font-family: monospace;
+    font-size: 12pt;
+
+    transform: translate(-50%, -50%);
+}
+
+.play-map-container .moving .detail input {
+    font-family: monospace;
+    font-size: 10pt;
+    width: 4em;
+    text-align: right;
+}
+
+.play-map-container .moving .detail label {
+    font-weight: bolder;
+}
+
+.play-map-container .moving .detail .buttons,
+.play-map-container .moving .detail .moving-properties {
+    margin-top: 1em;
+}
+
+.play-map-container .moving .detail a {
+    display: inline-block;
+    width: 10em;
+    text-align: center;
+}
+

@@ -31,10 +31,11 @@
             
             var mapId = $routeParams['map'];
             var gameService = App.ServiceFactory.getService("game_service");
+            $scope.gameService = gameService;
 
             $scope.updateGameStatus = function(game){
                 $scope.game = game;
-                $scope.player = $scope.game.player;
+                $scope.player = $scope.game.currentPlayer;
                 $scope.map = gameService.getCurrentMap();
 
                 if ($scope.mapView) {
@@ -42,18 +43,6 @@
                     $scope.mapView.reDrawArmies();
                 }
             };
-
-            gameService.startGame(mapId, function(game) {
-
-                $scope.updateGameStatus(game);
-
-                // initializing the map
-                var svgContainer = angular.element("#svgContainer");
-                svgContainer.html(gameService.getSVG());
-            
-                $scope.mapView = new App.Views.MapView(svgContainer[0], $scope.game, $scope.map);
-                $scope.mapView.init();
-            });
 
             // arrays for control
 
@@ -79,19 +68,78 @@
             $scope.messages = angular.element('.play-map-container .map-container .messages');
             $scope.goalCardDialog = angular.element(".play-map-container .goal-card");
             $scope.waitDialog = angular.element(".play-map-container .wait");
+            $scope.attackResultDialog = angular.element(".play-map-container .attack-result");
+            $scope.attackDialog = angular.element(".play-map-container .attack");
+            $scope.movingDialog = angular.element(".play-map-container .moving");
 
+            $scope.attackResultDialog.hide();
+            $scope.attackDialog.hide();
+            $scope.movingDialog.hide();
             $scope.goalCardDialog.hide();
             $scope.waitDialog.hide();
             $scope.turnControls.controls.hide();
 
             // events
 
-            $scope.showCard = function(){
-                $scope.goalCardDialog.show();
+            $scope.toogleMove = function(){
+                if ($scope.mapView.isMoving) {
+
+                    if (!$scope.mapView.hasActiveTerritory || !$scope.mapView.hasActiveMoveTerritory) {
+                        $scope.showMessage("No move territory selected, you must select one !");
+                        return false;
+                    }
+
+                    $scope.moving = {
+                        from     : $scope.mapView.activeTerritory,
+                        to       : $scope.mapView.activeMoveTerritory,
+                        quantity : 0,
+                    };
+
+                    var movableArmies = $scope.gameService.getMovableArmiesOf($scope.from);
+                        
+                    $scope.moving.max = (movableArmies.length);
+                    $scope.moving.quantity = $scope.moving.max;
+
+                    $scope.movingDialog.show();
+
+                } else {
+                    if (!$scope.mapView.hasActiveTerritory) {
+                        $scope.showMessage("No territory selected, you must select one !");
+                        return false;
+                    }
+
+                    if ($scope.mapView.activeTerritory.armies.length == 1) {
+                        $scope.showMessage("You can't move the occupation army. Choose other territory !");
+                        return false;
+                    }
+
+                    $scope.mapView.startMovingFrom ($scope.mapView.activeTerritory);
+
+                    $scope.resetTurnControls();
+                    $scope.turnControls.cancelButton.attr('disabled', false);
+                    $scope.turnControls.attackButton.attr('disabled', true);
+                    $scope.turnControls.endTurnButton.attr('disabled', true);
+                    $scope.turnControls.moveButton.text("Move !");
+                }
             };
 
-            $scope.hideCard = function(){
-                $scope.goalCardDialog.hide();
+            $scope.moveArmies = function(){
+                $scope.moved = true;
+                $scope.gameService.moveArmies($scope.player, $scope.moving.from, $scope.moving.to, $scope.moving.quantity, 
+                    function (game, result) {
+                        $scope.updateGameStatus(game);
+
+                        if (result.message != '')
+                            $scope.showMessage("Move failed: " + result.message);
+
+                        $scope.movingDialog.hide();
+
+                        $scope.resetTurnControls();
+                        $scope.turnControls.moveButton.text("Move Army");
+                        $scope.mapView.endMoving();
+                    }
+                );
+
             };
 
             $scope.toogleAttack = function(){
@@ -103,12 +151,28 @@
                         return false;
                     }
 
-                    $scope.resetTurnControls();
-                    $scope.turnControls.attackButton.text("Attack");
-                    $scope.mapView.cancelAttack();
+                    $scope.attack = {
+                        from : $scope.mapView.activeTerritory,
+                        target : $scope.mapView.activeAttackTerritory,
+                        quantity : 0,
+                    };
+
+                    if ($scope.attack.from.armies.length > 4)
+                        $scope.attack.max = 3;
+                    else 
+                        $scope.attack.max = $scope.attack.from.armies.length - 1;
+
+                    $scope.attack.quantity = $scope.attack.max;
+
+                    $scope.attackDialog.show();
                 } else {
                     if (!$scope.mapView.hasActiveTerritory) {
                         $scope.showMessage("No territory selected, you must select one !");
+                        return false;
+                    }
+
+                    if ($scope.mapView.activeTerritory.armies.length == 1) {
+                        $scope.showMessage("To attack your territory needs more than 1 army. Choose other territory !");
                         return false;
                     }
 
@@ -124,20 +188,26 @@
                 return true;
             };
 
-            $scope.cancel = function (){
-                if ($scope.mapView.isAttacking)
-                    $scope.mapView.cancelAttack();
+            $scope.attackTerritory = function(){
+                $scope.gameService.attackTerritory($scope.player, $scope.attack.from, $scope.attack.target, $scope.attack.quantity, 
+                    function (game, result) {
+                        $scope.updateGameStatus(game);
+                        $scope.attack.result = result;
 
-                if ($scope.mapView.isMoving)
-                    $scope.mapView.cancelMove();
+                        $scope.attackDialog.hide();
+                        $scope.attackResultDialog.show();
 
-                $scope.turnControls.attackButton.text("Attack");
-                $scope.turnControls.moveButton.text("Move Army");
-                
-                $scope.resetTurnControls();
+                        $scope.resetTurnControls();
+                        $scope.turnControls.attackButton.text("Attack");
+                        $scope.mapView.endAttack();                      
+                    }
+                );
             };
 
             $scope.placeArmy = function(){
+                if ($scope.newArmies.length == 0)
+                    return false;
+
                 if (!$scope.mapView.hasActiveTerritory) {
                     $scope.showMessage("No territory selected for placing... You still have " + ($scope.newArmies.length) + " to place !");
                     return false;
@@ -158,6 +228,9 @@
             };
 
             $scope.placeTurnDone = function(){
+                if ($scope.placeTurnControls.doneButton.attr("disabled"))
+                    return false;
+
                 $scope.waitDialog.show();
                 $scope.showMessage("Waiting for others players to end theirs turns ...");
                 gameService.endPlaceTurn ($scope.player, function(game) {
@@ -165,10 +238,39 @@
                 });
             };
 
+            $scope.endTurn = function(){
+                if ($scope.turnControls.endTurnButton.attr('disabled'))
+                    return false;
+
+                $scope.waitDialog.show();
+                $scope.showMessage("Waiting for others players to end theirs turns ...");
+                gameService.endMovimentTurn ($scope.player, function(game) {
+                    $scope.startPlaceTurn(game);
+                });
+            };
+
+            $scope.cancel = function (){
+                if ($scope.mapView.isAttacking)
+                    $scope.mapView.endAttack();
+
+                if ($scope.mapView.isMoving)
+                    $scope.mapView.endMoving();
+
+                $scope.turnControls.attackButton.text("Attack");
+                $scope.turnControls.moveButton.text("Move Army");
+                
+                $scope.resetTurnControls();
+            };
+
             // methods
 
             $scope.startPlaceTurn = function(){
+                $scope.waitDialog.hide();
+
                 $scope.resetPlaceTurnControls();
+
+                $scope.placeTurnControls.controls.show();
+                $scope.turnControls.controls.hide();
 
                 $scope.newArmies = gameService.getNewArmiesForPlayer($scope.player);
                 $scope.lastCommands = [];
@@ -178,12 +280,39 @@
             };
 
             $scope.startMovimentTurn = function(game){
+                $scope.waitDialog.hide();
 
+                $scope.moved = false;
                 $scope.updateGameStatus(game);
+
+                $scope.placeTurnControls.controls.hide();
+                $scope.turnControls.controls.show();
 
                 $scope.resetTurnControls();
                 $scope.showMessage("It's your turn ! Make your moves !");
+            };
 
+            // dialog controls
+
+            $scope.showCard = function(player){
+                $scope.goalCard = player.goalCard;
+                $scope.goalCardDialog.show();
+            };
+
+            $scope.hideCard = function(){
+                $scope.goalCardDialog.hide();
+            };
+
+            $scope.closeAttack = function(){
+                $scope.attackDialog.hide();
+            };
+
+            $scope.closeAttackResult = function(){
+                $scope.attackResultDialog.hide();
+            };
+
+            $scope.closeMoving = function(){
+                $scope.movingDialog.hide();
             };
 
             // helpers
@@ -194,7 +323,7 @@
             };
 
             $scope.resetTurnControls = function(){
-                $scope.turnControls.attackButton.attr('disabled', false);
+                $scope.turnControls.attackButton.attr('disabled', $scope.moved);
                 $scope.turnControls.moveButton.attr('disabled', false);
                 $scope.turnControls.endTurnButton.attr('disabled', false);
                 $scope.turnControls.cancelButton.attr('disabled', true);
@@ -204,9 +333,21 @@
                 $scope.messages.html(message);
             };
 
-            // run for it
+            // initialize
 
-            $scope.startPlaceTurn();
+            gameService.startGame(mapId, function(game) {
+
+                $scope.updateGameStatus(game);
+
+                // initializing the map
+                var svgContainer = angular.element("#svgContainer");
+                svgContainer.html(gameService.getSVG());
+            
+                $scope.mapView = new App.Views.MapView(svgContainer[0], $scope.game, $scope.map);
+                $scope.mapView.init();
+
+                $scope.startPlaceTurn();
+            });
         }
     ]);
     
