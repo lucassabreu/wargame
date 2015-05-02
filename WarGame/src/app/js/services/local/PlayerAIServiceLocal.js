@@ -2,12 +2,12 @@
 
 	var PlayerAIServiceLocal = function(App){
 		this.app = App;
+		this.graphs = {};
 	};
 
 	PlayerAIServiceLocal.GoalWeigth = {
-		'DestroyArmyGoal' : 3,
-		'ConquerContinentGoal' : 2,
-		'ConquerOtherContinentsGoal' : 1,
+		'DestroyArmyGoal' : 2,
+		'ConquerContinentGoal' : 1,
 		'ConquerAnyTerritoriesGoal' : 0,
 	};
 
@@ -60,14 +60,14 @@
 
 	PlayerAIServiceLocal.prototype.executeAttackMoviments = function (player, goals){
 		var that = this;
-
-		switch (goals[0].goalType) {
-			case 'DestroyArmyGoal':
-				var territories;
-				var neighbors;
-				var numberOfArmies = 0;
 				
-				for(var i in goals) {
+		for(var i in goals) {
+			switch (goals[i].goalType) {
+				case 'DestroyArmyGoal':
+					var territories;
+					var neighbors;
+					var numberOfArmies = 0;
+				
 
 					// attack closest goals
 
@@ -124,56 +124,61 @@
 							});
 						}
 					}
-				}
-
 				break;
-
-			case 'ConquerContinentGoal':
-				var territories = player.territories.filter(function (t) {
-					return t.continent == goals[i].continent && t.armies.length > 1;
-				});
-
-				for (var t in territories) {
-					this._attackNeighborsFromTo (territories[t], function (t) {
-						return t.neighbors.filter (function (n) {
-							return n.occupiedBy != player && n.continent == goals[i].continent;
-						}).sort (function (p, c) {
-							return c.armies.length > p.armies.length ? -1 : 1;
-						});
-					});
-				}
-
-				territories = player.territories.filter (function (t) {
-					return t.armies.length > 1;
-				});
-
-				if (territories.length > 0) {
-					var targets = this._queryTerritories (function (t) {
-						return t.continent == goals[i].continent;
+				case 'ConquerContinentGoal':
+					var territories = player.territories.filter(function (t) {
+						return t.continent == goals[i].continent && t.armies.length > 1;
 					});
 
-					for(var t in territories) {
+					for (var t in territories) {
 						this._attackNeighborsFromTo (territories[t], function (t) {
-							var paths = that._getShortestPathFromTo (t, targets, function (t) {
-								return t.occupiedBy.continent == goals[i].continent ? 0 : 1;
-							}).sort(function (p, c) {
-								return c.weigth < p.weigth ? -1 : 1;
+							return t.neighbors.filter (function (n) {
+								return n.occupiedBy != player && n.continent == goals[i].continent;
+							}).sort (function (p, c) {
+								return c.armies.length > p.armies.length ? -1 : 1;
 							});
-
-							var neighbors = [];
-							for (var p in paths) {
-								if (paths[p].jumps[0].territory.occupiedBy != player)
-									neighbors.push(paths[p].jumps[0].territory); // get the first jump (must be a neighbor)
-							}
-
-							return neighbors;
 						});
 					}
-				}
 
+					territories = player.territories.filter (function (t) {
+						return t.armies.length > 1;
+					});
+
+					if (territories.length > 0) {
+						var targets = this._queryTerritories (function (t) {
+							return t.continent == goals[i].continent;
+						});
+
+						for(var t in territories) {
+							this._attackNeighborsFromTo (territories[t], function (t) {
+								var paths = that._getShortestPathFromTo (t, targets, function (t) {
+									return t.occupiedBy.continent == goals[i].continent ? 0 : 1;
+								}).sort(function (p, c) {
+									return c.weigth < p.weigth ? -1 : 1;
+								});
+
+								var neighbors = [];
+								for (var p in paths) {
+									if (paths[p].jumps[0].territory.occupiedBy != player)
+										neighbors.push(paths[p].jumps[0].territory); // get the first jump (must be a neighbor)
+								}
+
+								return neighbors;
+							});
+						}
+					}
 				break;
-		}
+				case 'ConquerAnyTerritoriesGoal':
 
+					var territories = player.territories.filter (function (t) {
+						return t.armies.length > goals[i].armyAtEachOne;
+					});
+
+					// keep on going from here
+
+					break;
+			}
+		}
 	};
 
 	PlayerAIServiceLocal.prototype._attackNeighborsFromTo = function (from, neighborsSelector){
@@ -253,159 +258,78 @@
 
 	PlayerAIServiceLocal.prototype._placeArmiesByGoal = function(player, goal, armies){
 
-		if ((goal instanceof App.Models.Goals.ConquerAnyTerritoriesGoal)) {
-			var myTerrotories = this._queryTerritories(function(t){
-				return t.occupiedBy == player && t.armies.length < goal.armyAtEachOne;
-			});
+		switch (goal.goalType) {
 
-			var territory, army;
-			
-			if (myTerrotories.length > 0) {
-				while(armies.length > 0 && myTerrotories.length > 0) {
-					territory = myTerrotories.pop();
-
-					army = armies.pop();
-					for(var i = territory.armies.length; i < goal.armyAtEachOne && army; i++) {
-						this.gameService.placeArmyAt(player, army, territory);
-						army = armies.pop();
-					}
-				}
-			}
-
-			if (armies.length > 0) {
-				var myTerrotories = player.territories;
-				var weigths = new Array(myTerrotories.length);
-				var weigthFunction = function(t){
-					return t.occupiedBy == player ? t.armies.length : 0;
-				};
-
-				var totalWeigth = 0;
-				var weigthObject;
-				for(var i in myTerrotories) {
-					weigths.push(weigthObject = {
-						t : myTerrotories[i],
-						w : this._getWeigthOf(myTerrotories[i], 2, weigthFunction),
-					});
-
-					totalWeigth += weigthObject.w;
-				}
-
-				var med = totalWeigth / weigths.length;
-				weigths = weigths.filter(function(w){
-					return w.w >= med;
-				}).sort(function(p, c){
-					return p.w > c.w ? -1 : 1;
+			case 'ConquerAnyTerritoriesGoal':
+				var myTerrotories = this._queryTerritories(function(t){
+					return t.occupiedBy == player && t.armies.length < goal.armyAtEachOne;
 				});
 
-				var army, territoryIndex = 0;
-				while(army = armies.pop()) {
-					this.gameService.placeArmyAt(player, army, weigths[territoryIndex++ % weigths.length].t);
-				}
-			}
-		} else {
-			if (goal instanceof App.Models.Goals.ConquerOtherContinentsGoal) {
-				// todo : implement it !
-			} else {
+				var territory, army;
+				
+				if (myTerrotories.length > 0) {
+					while(armies.length > 0 && myTerrotories.length > 0) {
+						territory = myTerrotories.pop();
 
-				if (goal instanceof App.Models.Goals.ConquerContinentGoal) {
-
-					var territories = this._queryTerritories(function(t){
-						return t.occupiedBy == player && t.continent == goal.continent;
-					});
-
-					if (territories.length > 0) {
-						var weigths = [];
-						var weigth, totalWeigth = 0;
-						var weigthFunction = function(t) {
-							return t.occupiedBy == player ? t.armies.length : 0;
-						};
-
-						for(var i in territories) {
-							weigth = this._getWeigthOf(territories[i], 2, weigthFunction);
-							weigths.push({
-								t : territories[i],
-								w : weigth,
-							});
-
-							totalWeigth += weigth;
-						}
-
-						weigths = weigths.filter(function(w) {
-							return w.w >= (totalWeigth / weigths.length);
-						});
-
-						var army;
-						var wIndex = 0;
-						while(army = armies.pop()) {
-							this.gameService.placeArmyAt(player, army, weigths[wIndex++ % weigths.length].t);
-						}
-					} else {
-						var targets = this._queryTerritories(function(t) {
-							return t.continent == goal.continent;
-						});
-
-						territories = Array.copy(player.territories);
-
-						var paths = [];
-						var totalDistance = 0;
-						var distances = [];
-						var distance = 0;
-
-						for(var i in territories) {
-							paths = this._getShortestPathFromTo(territories[i], targets).sort(function(p) {
-								return p.jumpsCount > p.jumpsCount ? -1 : 1;
-							});
-
-							distance = paths[0].jumpsCount;
-							distances.push({
-								t : territories[i],
-								d : distance,
-							});
-							totalDistance += distance;
-						}
-
-						distances = distances.filter(function(d) {
-							return d.d <= (totalDistance / distances.length);
-						}).sort(function(p, c) {
-							return p.d > c.d ? 1 : -1;
-						});
-
-						var army;
-						var dIndex = 0;
-						while(army = armies.pop()) {
-							this.gameService.placeArmyAt(player, army, distances[dIndex++ % distances.length].t);
+						army = armies.pop();
+						for(var i = territory.armies.length; i < goal.armyAtEachOne && army; i++) {
+							this.gameService.placeArmyAt(player, army, territory);
+							army = armies.pop();
 						}
 					}
-				} else { // App.Models.Goals.DestroyArmyGoal
+				}
 
-					var territories = Array.copy(player.territories);
-					var paths = [];
+				if (armies.length > 0) {
+					var myTerrotories = player.territories;
+					var weigths = new Array(myTerrotories.length);
+					var weigthFunction = function(t){
+						return t.occupiedBy == player ? t.armies.length : 0;
+					};
+
 					var totalWeigth = 0;
-					var weigths = [];
-					var targets = this._queryTerritories(function(t){
-						return t.armyColor == goal.army;
+					var weigthObject;
+					for(var i in myTerrotories) {
+						weigths.push(weigthObject = {
+							t : myTerrotories[i],
+							w : this._getWeigthOf(myTerrotories[i], 2, weigthFunction),
+						});
+
+						totalWeigth += weigthObject.w;
+					}
+
+					var med = totalWeigth / weigths.length;
+					weigths = weigths.filter(function(w){
+						return w.w >= med;
+					}).sort(function(p, c){
+						return p.w > c.w ? -1 : 1;
 					});
+
+					var army, territoryIndex = 0;
+					while(army = armies.pop()) {
+						this.gameService.placeArmyAt(player, army, weigths[territoryIndex++ % weigths.length].t);
+					}
+				}
+			break;
+			case 'ConquerContinentGoal':
+				var territories = this._queryTerritories(function(t){
+					return t.occupiedBy == player && t.continent == goal.continent;
+				});
+
+				if (territories.length > 0) {
+					var weigths = [];
+					var weigth, totalWeigth = 0;
 					var weigthFunction = function(t) {
-						return t.occupiedBy.armyColor == goal.army ? t.armies.length : 0;
+						return t.occupiedBy == player ? t.armies.length : 0;
 					};
 
 					for(var i in territories) {
-
-						paths[i] = this._getShortestPathFromTo(territories[i], targets, weigthFunction);
-
-						territoryWeigth = paths[i].reduce (function(p, c) {
-							if (p instanceof Path)
-								p = p.weigth / p.jumpsCount;
-
-							return p + (c.weigth / c.jumpsCount);
-						});
-
+						weigth = this._getWeigthOf(territories[i], 2, weigthFunction);
 						weigths.push({
 							t : territories[i],
-							w : territoryWeigth
+							w : weigth,
 						});
 
-						totalWeigth += territoryWeigth;
+						totalWeigth += weigth;
 					}
 
 					weigths = weigths.filter(function(w) {
@@ -417,14 +341,92 @@
 					while(army = armies.pop()) {
 						this.gameService.placeArmyAt(player, army, weigths[wIndex++ % weigths.length].t);
 					}
+				} else {
+					var targets = this._queryTerritories(function(t) {
+						return t.continent == goal.continent;
+					});
+
+					territories = Array.copy(player.territories);
+
+					var paths = [];
+					var totalDistance = 0;
+					var distances = [];
+					var distance = 0;
+
+					for(var i in territories) {
+						paths = this._getShortestPathFromTo(territories[i], targets).sort(function(p) {
+							return p.jumpsCount > p.jumpsCount ? -1 : 1;
+						});
+
+						distance = paths[0].jumpsCount;
+						distances.push({
+							t : territories[i],
+							d : distance,
+						});
+						totalDistance += distance;
+					}
+
+					distances = distances.filter(function(d) {
+						return d.d <= (totalDistance / distances.length);
+					}).sort(function(p, c) {
+						return p.d > c.d ? 1 : -1;
+					});
+
+					var army;
+					var dIndex = 0;
+					while(army = armies.pop()) {
+						this.gameService.placeArmyAt(player, army, distances[dIndex++ % distances.length].t);
+					}
 				}
-			}
+			break;
+			case 'DestroyArmyGoal':
+
+				var territories = Array.copy(player.territories);
+				var paths = [];
+				var totalWeigth = 0;
+				var weigths = [];
+				var targets = this._queryTerritories(function(t){
+					return t.armyColor == goal.army;
+				});
+				var weigthFunction = function(t) {
+					return t.occupiedBy.armyColor == goal.army ? t.armies.length : 0;
+				};
+
+				for(var i in territories) {
+
+					paths[i] = this._getShortestPathFromTo(territories[i], targets, weigthFunction);
+
+					territoryWeigth = paths[i].reduce (function(p, c) {
+						if (p instanceof Path)
+							p = p.weigth / p.jumpsCount;
+
+						return p + (c.weigth / c.jumpsCount);
+					});
+
+					weigths.push({
+						t : territories[i],
+						w : territoryWeigth
+					});
+
+					totalWeigth += territoryWeigth;
+				}
+
+				weigths = weigths.filter(function(w) {
+					return w.w >= (totalWeigth / weigths.length);
+				});
+
+				var army;
+				var wIndex = 0;
+				while(army = armies.pop()) {
+					this.gameService.placeArmyAt(player, army, weigths[wIndex++ % weigths.length].t);
+				}
+			break;
 		}
 	}
 
 	// helpers
 
-	PlayerAIServiceLocal.prototype._mustImportantGoals = function (goals){
+	PlayerAIServiceLocal.prototype._mustImportantGoals = function (goals) {
 		var goals = goals.filter(function(g) {
 			return !g.completed && !g.failed;
 		});
