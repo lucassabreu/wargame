@@ -152,19 +152,17 @@
         }
 	],
 	"goalCards" : [
-		{ "goalText" : "Conquistar na totalidade a EUROPA, a OCEANIA e mais um terceiro.", "goals" : [
+		{ "goalText" : "Conquistar na totalidade a EUROPA e a OCEANIA.", "goals" : [
 			{"type" : "conquerContinent", "continent" : "Europe"},
 			{"type" : "conquerContinent", "continent" : "Austrailia"},
-			{"type" : "conquerOtherContinents", "quantity" : 1, "armyAtEachOne" : 1}
 		]}, 
 		{ "goalText" : "Conquistar na totalidade a ASIA e a AMÉRICA DO SUL.", "goals" : [
 			{"type" : "conquerContinent", "continent" : "Asia"},
 			{"type" : "conquerContinent", "continent" : "South America"}
 		]}, 
-		{ "goalText" : "Conquistar na totalidade a EUROPA, a AMÉRICA DO SUL e mais um terceiro.", "goals" : [
+		{ "goalText" : "Conquistar na totalidade a EUROPA e a AMÉRICA DO SUL", "goals" : [
 			{"type" : "conquerContinent", "continent" : "Europe"},
 			{"type" : "conquerContinent", "continent" : "South America"},
-			{"type" : "conquerOtherContinents", "quantity" : 1, "armyAtEachOne" : 1}
 		]}, 
 		{ "goalText" : "Conquistar na totalidade a ASIA e a ÁFRICA." , "goals" : [
 			{"type" : "conquerContinent", "continent" : "Asia"},

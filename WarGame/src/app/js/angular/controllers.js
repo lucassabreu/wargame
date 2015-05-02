@@ -89,13 +89,18 @@
                         return false;
                     }
 
+                    var movableArmies = $scope.gameService.getMovableArmiesOf($scope.player, $scope.mapView.activeTerritory);
+
+                    if (movableArmies.length == 0) {
+                        $scope.showMessage("All armies has been moved before in this territory ! Choose other !");
+                        return false;
+                    }
+
                     $scope.moving = {
                         from     : $scope.mapView.activeTerritory,
                         to       : $scope.mapView.activeMoveTerritory,
                         quantity : 0,
                     };
-
-                    var movableArmies = $scope.gameService.getMovableArmiesOf($scope.from);
                         
                     $scope.moving.max = (movableArmies.length);
                     $scope.moving.quantity = $scope.moving.max;
@@ -113,6 +118,13 @@
                         return false;
                     }
 
+                    var movableArmies = $scope.gameService.getMovableArmiesOf($scope.player, $scope.mapView.activeTerritory);
+
+                    if (movableArmies.length == 0) {
+                        $scope.showMessage("All armies has been moved before in this territory ! Choose other !");
+                        return false;
+                    }
+
                     $scope.mapView.startMovingFrom ($scope.mapView.activeTerritory);
 
                     $scope.resetTurnControls();
@@ -124,14 +136,15 @@
             };
 
             $scope.moveArmies = function(){
-                $scope.moved = true;
                 $scope.gameService.moveArmies($scope.player, $scope.moving.from, $scope.moving.to, $scope.moving.quantity, 
                     function (game, result) {
                         $scope.updateGameStatus(game);
 
                         if (result.message != '')
                             $scope.showMessage("Move failed: " + result.message);
-
+                        else 
+                            $scope.moved = true;
+                        
                         $scope.movingDialog.hide();
 
                         $scope.resetTurnControls();
@@ -264,8 +277,11 @@
 
             // methods
 
-            $scope.startPlaceTurn = function(){
+            $scope.startPlaceTurn = function(game){
                 $scope.waitDialog.hide();
+
+                $scope.moved = false;
+                $scope.updateGameStatus(game);
 
                 $scope.resetPlaceTurnControls();
 
@@ -346,7 +362,7 @@
                 $scope.mapView = new App.Views.MapView(svgContainer[0], $scope.game, $scope.map);
                 $scope.mapView.init();
 
-                $scope.startPlaceTurn();
+                $scope.startPlaceTurn(game);
             });
         }
     ]);

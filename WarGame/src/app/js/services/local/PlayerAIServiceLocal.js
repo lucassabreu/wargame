@@ -40,26 +40,182 @@
 
 	// ai
 
-	PlayerAIServiceLocal.prototype.executePlacementTurnOf = function(player){
+	// moviment turn ...
 
-		var goals = Array.copy(player.goalCard.currentGoals).filter(function(g) {
-			return !g.completed && !g.failed;
-		});
+	PlayerAIServiceLocal.prototype.executeMovimentTurnOf = function(player){
+		var goals = this._mustImportantGoals(player.goalCard.currentGoals);
 
-		var goalsControl = [];
+		this.executeAttackMoviments (player, goals); // do attacks
+		//this.executeMovesMoviments (player, goals);	// move the armies
 
-		for(var i in goals) {
-			if (!goalsControl[this._getGoalWeigth(goals[i])])
-				goalsControl[this._getGoalWeigth(goals[i])] = [];
+		this.gameService.endMovimentTurn (player, (function(player, playerAI){
+			return function(game){
+				if (game.completed)
+					return;
 
-			goalsControl[this._getGoalWeigth(goals[i])].push(goals[i]);
+				playerAI.executePlacementTurnOf(player);
+			};		
+		}) (player, this));
+	};
+
+	PlayerAIServiceLocal.prototype.executeAttackMoviments = function (player, goals){
+		var that = this;
+
+		switch (goals[0].goalType) {
+			case 'DestroyArmyGoal':
+				var territories;
+				var neighbors;
+				var numberOfArmies = 0;
+				
+				for(var i in goals) {
+
+					// attack closest goals
+
+					territories = player.territories.filter(function (t) {
+						return that._getWeigthOf(t, 1, function(n) {
+							return t.armies.length > 1 && n.occupiedBy.armyColor == goals[i].army;
+						})
+					}).sort(function(p, c) {
+						return c.armies.length > p.armies.length ? -1 : 1; // strongest first 
+					});
+
+					for (var t in territories) {
+
+						this._attackNeighborsFromTo (territories[t], function(territory) {
+							neighbors = territory.neighbors.filter(function(n) {
+								return n.occupiedBy.armyColor == goals[i].army;
+							});
+
+							neighbors.sort(function(p, c) {
+								return c.armies.length > p.armies.length ? 1 : -1; // tiniest ones first
+							});
+
+							return neighbors;
+						});
+
+					}
+
+					// attack to get closer to goals
+
+					territories = player.territories.filter(function (t){
+						return t.armies.length > 1;
+					});
+
+					if (territories.length > 0) {
+						var targets = this._queryTerritories (function(t) {
+							return t.occupiedBy.armyColor == goals[i].army;
+						});
+
+						for(var t in territories) {
+							this._attackNeighborsFromTo (territories[t], function (t) {
+								var paths = that._getShortestPathFromTo (t, targets, function (t) {
+									return t.occupiedBy.armyColor == goals[i].army ? t.armies.length : 0;
+								}).sort(function (p, c) {
+									return c.jumpsCount > p.jumpsCount ? -1 : 1;
+								});
+
+								var neighbors = [];
+								for (var p in paths) {
+									if (paths[p].jumps[0].territory.occupiedBy != player)
+										neighbors.push(paths[p].jumps[0].territory); // get the first jump (must be a neighbor)
+								}
+
+								return neighbors;
+							});
+						}
+					}
+				}
+
+				break;
+
+			case 'ConquerContinentGoal':
+				var territories = player.territories.filter(function (t) {
+					return t.continent == goals[i].continent && t.armies.length > 1;
+				});
+
+				for (var t in territories) {
+					this._attackNeighborsFromTo (territories[t], function (t) {
+						return t.neighbors.filter (function (n) {
+							return n.occupiedBy != player && n.continent == goals[i].continent;
+						}).sort (function (p, c) {
+							return c.armies.length > p.armies.length ? -1 : 1;
+						});
+					});
+				}
+
+				territories = player.territories.filter (function (t) {
+					return t.armies.length > 1;
+				});
+
+				if (territories.length > 0) {
+					var targets = this._queryTerritories (function (t) {
+						return t.continent == goals[i].continent;
+					});
+
+					for(var t in territories) {
+						this._attackNeighborsFromTo (territories[t], function (t) {
+							var paths = that._getShortestPathFromTo (t, targets, function (t) {
+								return t.occupiedBy.continent == goals[i].continent ? 0 : 1;
+							}).sort(function (p, c) {
+								return c.weigth < p.weigth ? -1 : 1;
+							});
+
+							var neighbors = [];
+							for (var p in paths) {
+								if (paths[p].jumps[0].territory.occupiedBy != player)
+									neighbors.push(paths[p].jumps[0].territory); // get the first jump (must be a neighbor)
+							}
+
+							return neighbors;
+						});
+					}
+				}
+
+				break;
 		}
 
-		goalsControl = goalsControl.filter(function(g) {
-			return g !== undefined;
-		});
+	};
 
-		goals = goalsControl.pop(); // must important current goals
+	PlayerAIServiceLocal.prototype._attackNeighborsFromTo = function (from, neighborsSelector){
+		var neighbors = neighborsSelector(from);
+		var that = this;
+
+		for (var n in neighbors) {
+			if (from.armies.length == 1)
+				break;
+
+			if (neighbors[n].occupiedBy != from.occupiedBy) {
+				var numberOfArmies = from.armies.length - 1;
+
+				if (numberOfArmies > 3)
+					numberOfArmies = 3;
+
+				this.gameService.attackTerritory(from.occupiedBy, from, neighbors[n], numberOfArmies, function(game, result) {
+					that._attackNeighborsCallback (game, result, from, neighbors[n], neighborsSelector);
+				});
+			}
+		}
+	};
+
+	PlayerAIServiceLocal.prototype._attackNeighborsCallback = function (game, result, from, to, neighborsSelector){
+		if (result.state == 'occupied') {
+			if (to.armies.length > 1) {
+				this._attackNeighborsFromTo(to, neighborsSelector);
+			}
+		} else {
+			if (result.state == 'winner' && from.armies.length > 1) {
+				var numberOfArmies = form.armies.length - 1;
+				if (numberOfArmies > 3) numberOfArmies = 3;
+				this.gameService.attackTerritory(from.occupiedBy, from, to, numberOfArmies);
+			}
+		}
+	};
+
+	// placement turn ...
+
+	PlayerAIServiceLocal.prototype.executePlacementTurnOf = function(player){
+
+		var goals = this._mustImportantGoals(player.goalCard.currentGoals);
 
 		var armies = this.gameService.getNewArmiesForPlayer(player);
 		var armiesForGoal = new Array(goals.length);
@@ -90,7 +246,7 @@
 				if (game.completed)
 					return;
 
-				playerAI.executeAttackingTurnOf(player);
+				playerAI.executeMovimentTurnOf(player);
 			};		
 		})(player, this));
 	};
@@ -183,6 +339,42 @@
 						while(army = armies.pop()) {
 							this.gameService.placeArmyAt(player, army, weigths[wIndex++ % weigths.length].t);
 						}
+					} else {
+						var targets = this._queryTerritories(function(t) {
+							return t.continent == goal.continent;
+						});
+
+						territories = Array.copy(player.territories);
+
+						var paths = [];
+						var totalDistance = 0;
+						var distances = [];
+						var distance = 0;
+
+						for(var i in territories) {
+							paths = this._getShortestPathFromTo(territories[i], targets).sort(function(p) {
+								return p.jumpsCount > p.jumpsCount ? -1 : 1;
+							});
+
+							distance = paths[0].jumpsCount;
+							distances.push({
+								t : territories[i],
+								d : distance,
+							});
+							totalDistance += distance;
+						}
+
+						distances = distances.filter(function(d) {
+							return d.d <= (totalDistance / distances.length);
+						}).sort(function(p, c) {
+							return p.d > c.d ? 1 : -1;
+						});
+
+						var army;
+						var dIndex = 0;
+						while(army = armies.pop()) {
+							this.gameService.placeArmyAt(player, army, distances[dIndex++ % distances.length].t);
+						}
 					}
 				} else { // App.Models.Goals.DestroyArmyGoal
 
@@ -231,6 +423,27 @@
 	}
 
 	// helpers
+
+	PlayerAIServiceLocal.prototype._mustImportantGoals = function (goals){
+		var goals = goals.filter(function(g) {
+			return !g.completed && !g.failed;
+		});
+
+		var goalsControl = [];
+
+		for(var i in goals) {
+			if (!goalsControl[this._getGoalWeigth(goals[i])])
+				goalsControl[this._getGoalWeigth(goals[i])] = [];
+
+			goalsControl[this._getGoalWeigth(goals[i])].push(goals[i]);
+		}
+
+		goalsControl = goalsControl.filter(function(g) {
+			return g !== undefined;
+		});
+
+		return goalsControl.pop(); // must important current goals
+	};
 
 	PlayerAIServiceLocal.prototype._getGoalWeigth = function(goal){
 		return this.goalWeigth[goal.goalType];

@@ -5,6 +5,7 @@
         this.mapId = mapId;
         this.players = [];
         this.armies = [];
+        this.historic = [],
         this.state = null;
 
         this._armies = {};
@@ -24,6 +25,8 @@
         winner : null,
         completed : false,
         state : null,
+
+        historic : [],
 
         _armies : {},
     };

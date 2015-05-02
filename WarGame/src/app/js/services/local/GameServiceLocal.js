@@ -41,17 +41,52 @@
     };
 
     GameServiceLocal.prototype.placeArmyAt = function(player, army, territory){
-        console.log(player.name + " | " + territory.name + " | " + army.id);
         territory.armies.push(army);
+
+        var h = {
+            p : player,
+            t : territory,
+            a : army,
+        };
+
+        h.toString = function(){
+            return "The player \"" + this.p.name + "\" put a army at \"" + this.t.name + "\".";
+        };
+
+        this.game.historic.push(h);
+        console.log(h.toString());
     };
 
     GameServiceLocal.prototype.attackTerritory = function(player, fromTerritory, targetTerritory, armiesNumber, callbackFunction){
-
         var defensePlayer = targetTerritory.occupiedBy;
+        var that = this;
         var result = {
             attackDices : [],
             defenseDices : [],
             state : null,
+        };
+
+        var cf = callbackFunction;
+        callbackFunction = function(game, result){
+            var h = {
+                p : player,
+                d : defensePlayer,
+                from : fromTerritory,
+                target : targetTerritory,
+                armies : armiesNumber,
+                result : result,
+            };
+
+            h.toString = function (){
+                return ("Player \"" + this.p.name + "\" attacked \"" + this.target.name + 
+                        "\" of \"" + this.d.name + "\" from \"" + this.from.name + "\", and " + this.result.state + 
+                        " with " + this.armies.toString() + " armies.");
+            };
+
+            game.historic.push(h);
+            console.log(h.toString());
+
+            cf(game, result);
         };
 
         if (armiesNumber > 3 || armiesNumber > (fromTerritory.armies.length - 1)) {
@@ -110,12 +145,15 @@
 
             var moveNumber = armiesNumber - loses.length;
             var army;
+            var movingArmies = [];
+            var movable = fromTerritory.armies.filter(function(){
+                return true;
+            });
 
-            for(var i = 0; i < moveNumber; i++) {
-                army = fromTerritory.armies.pop();
-                army.territory = targetTerritory;
-                targetTerritory.armies.push(army);
-            }
+            for(var i = 0; i < moveNumber; i++) 
+                movingArmies.push(movable.pop());
+
+            this._placeArmiesFromTo(fromTerritory, targetTerritory, movingArmies);            
         }
 
         for(var i in wins)
@@ -128,6 +166,64 @@
 
         for(var i in allDowns)
             this.game.removeArmy(allDowns[i]);
+
+        callbackFunction(this.game, result);
+    };
+
+    GameServiceLocal.prototype.getMovableArmiesOf = function (player, territory){
+        var that = this;
+        var movable = territory.armies.filter(function(army){
+            return !Array.has(that.movedArmies, army);
+        });
+
+        if (territory.armies.length == movable.length) {
+            movable.pop(); // can't move occupation territory
+        }
+
+        return movable;
+    };
+
+    GameServiceLocal.prototype.moveArmies = function (player, fromTerritory, toTerritory, numberOfArmies, callbackFunction){
+        var result = {
+            message : '',
+        };
+
+        var movable = this.getMovableArmiesOf(player, fromTerritory);
+
+        var cf = callbackFunction;
+        callbackFunction = function(game, result){
+
+            var h = {
+                p : player,
+                f : fromTerritory,
+                t : toTerritory,
+                n : numberOfArmies,
+            };
+
+            h.toString = function(){
+                return "The player \"" + this.p.name + "\" moved " + this.n.toString() + " from \"" + 
+                        this.f.name + "\" to \"" + this.t.name + "\".";
+            };
+
+            game.historic.push(h);
+            console.log(h.toString());
+
+            cf(game, result);
+        };
+
+        if (movable.length < numberOfArmies) {
+            result.message = "The territory has not this much armies to move !";
+        } else {
+            var moving = [];
+            for(var i = 0; i < numberOfArmies; i++) {
+                moving.push(movable.pop());
+            }
+
+            for(var i in moving)
+                this.movedArmies.push(moving[i]);
+
+            this._placeArmiesFromTo(fromTerritory, toTerritory, moving);            
+        }
 
         callbackFunction(this.game, result);
     };
@@ -150,6 +246,7 @@
             this.game.currentPlayer = this.game.players[0];
         }
 
+        this._cleanTurn();
         this._getCallbackOfPlayer(this.game.currentPlayer)(this.game);
     };
 
@@ -172,6 +269,7 @@
             this.game.currentPlayer = this.game.players[0];
         }
 
+        this._cleanTurn();
         this._getCallbackOfPlayer(this.game.currentPlayer)(this.game);
     };
 
@@ -234,6 +332,20 @@
     };
     
     // internal
+
+    GameServiceLocal.prototype._placeArmiesFromTo = function (fromTerritory, toTerritory, armiesToMove){
+        var army;
+        while(army = armiesToMove.pop()) {
+            Array.remove(army, fromTerritory.armies);
+            army.territory = toTerritory;
+            toTerritory.armies.push(army);
+        }
+    }
+
+    GameServiceLocal.prototype._cleanTurn = function(){
+        this.currentPlayer = null;
+        while(this.movedArmies.pop()); // clean the array
+    };
 
     GameServiceLocal.prototype._nextPlayer = function(){
         var index = this.game.players.indexOf(this.game.currentPlayer) + 1;
