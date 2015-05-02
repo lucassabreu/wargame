@@ -19,14 +19,14 @@ AppController.prototype.__defineGetter__('ArmyColors', function () {
 });
 
 AppController.prototype.getValidArmyColor = function(color){
-	color = color.toLowerCase();
+    color = color.toLowerCase();
 
-	for(var i in this.ArmyColors) {
-		if (this.ArmyColors[i].toLowerCase() == color)
-			return this.ArmyColors[i];
-	}
+    for(var i in this.ArmyColors) {
+        if (this.ArmyColors[i].toLowerCase() == color)
+            return this.ArmyColors[i];
+    }
 
-	return null;
+    return null;
 };
 
 /* centraliza todas as outras classes e valores abaixo dessa variável */

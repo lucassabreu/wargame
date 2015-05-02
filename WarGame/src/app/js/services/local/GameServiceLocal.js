@@ -94,6 +94,7 @@
             callbackFunction(game, result);
             return;
         }
+        
 
         var defenseNumber = targetTerritory.armies.length;
 
