@@ -235,10 +235,14 @@
                 var element = this.attr('territoryQuery');
 
                 if(that.isAttacking) {
-                    that.onClickAttackTerritory(evt, that._getById(element + '_attack'));
+                    var element = that._getById(element + '_attack');
+                    if (element)
+                        that.onClickAttackTerritory(evt, element);
                 } else {
                     if (that.isMoving) {
-                        that.onClickMoveTerritory(evt, that._getById(element + '_move'));
+                        var element = that._getById(element + '_move');
+                        if (element)
+                            that.onClickMoveTerritory(evt, element);
                     } else {
                         that.onClickTerritory(evt, that._getById(element));
                     }

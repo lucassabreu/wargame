@@ -25,7 +25,7 @@
         { "name" : "Asia", "bonusArmy" : 7,
             "territories": [ 
                 {"name" : "Afghanistan", "query" : "Afghanistan", "neighbors" : [
-                    "China", "Ural", "Ukraine", "Middle East"
+                    "China", "Ural", "Ukraine", "Middle East", "India"
                 ], "center" : { "x" : 660, "y": 250 } } ,
                 {"name" : "India", "query" : "India", "neighbors" : [
                     "Siam", "China", "Afghanistan", "Middle East"
@@ -93,7 +93,7 @@
                     "Ukraine", "Iceland", "Great Britain"
                 ], "center" : { "x" : 495, "y": 135 } },
                 {"name" : "Southern Europe", "query" : "SouthernEurope", "neighbors" : [
-                    "Middle East", "Ukraine", "Northern Europe", "Western Europe"
+                    "Middle East", "Ukraine", "Northern Europe", "Western Europe", "Egypt", "North Africa"
                 ], "center" : { "x" : 510, "y": 265 } },
                 {"name" : "Ukraine", "query" : "Ukraine", "neighbors" : [
                     "Afghanistan", "Ural", "Scandinavia", "Northern Europe", "Southern Europe", "Middle East"

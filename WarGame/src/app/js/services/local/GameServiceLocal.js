@@ -16,6 +16,7 @@
         movedArmies : [],
         callbacks : [],
         history : [],
+        turnCount : 0,
     };
 
     GameServiceLocal.prototype.__defineGetter__('playerAI', function(){
@@ -29,31 +30,33 @@
     GameServiceLocal.prototype.__defineGetter__('goalService', function(){
         return this.app.ServiceFactory.getService('goal_service');
     });
-    
-    GameServiceLocal.prototype.getNewArmiesForPlayer = function(player){
-        var number = Math.floor( player.territories.length / 2.0 );
-        var armies = [];
 
-        for(var i = 0; i < number; i++)
-            armies.push(this._createArmy(player));
+    GameServiceLocal.prototype.__defineGetter__('currentPlayer', function(){
+        return this.game.currentPlayer;
+    });
 
-        return armies;
-    };
+    GameServiceLocal.prototype.__defineSetter__('currentPlayer', function(player){
+        this.game.currentPlayer = player;
+    });
 
     GameServiceLocal.prototype.placeArmyAt = function(player, army, territory){
-        territory.armies.push(army);
+        if (territory.occupiedBy != player && territory.occupiedBy != null)
+            throw "You can only place a army in your territories !";
+
+        this._placeArmiesFromTo([army], territory);
 
         var h = {
             p : player,
             t : territory,
             a : army,
+            ra : this.getNewArmiesForPlayer(player).length
         };
 
         h.toString = function(){
-            return "The player \"" + this.p.name + "\" put a army at \"" + this.t.name + "\".";
+            return "Player \"" + this.p.name + "\" put a army at \"" + this.t.name + "\", " + this.ra + " armies remaining.";
         };
 
-        this.game.historic.push(h);
+        this.game.historic[this.turnCount].push(h);
         console.log(h.toString());
     };
 
@@ -66,35 +69,27 @@
             state : null,
         };
 
-        var cf = callbackFunction;
-        callbackFunction = function(game, result){
-            var h = {
-                p : player,
-                d : defensePlayer,
-                from : fromTerritory,
-                target : targetTerritory,
-                armies : armiesNumber,
-                result : result,
-            };
+        var h = {
+            p : player,
+            d : defensePlayer,
+            from : fromTerritory,
+            target : targetTerritory,
+            armies : armiesNumber,
+            result : result,
+        };
 
-            h.toString = function (){
-                return ("Player \"" + this.p.name + "\" attacked \"" + this.target.name + 
-                        "\" of \"" + this.d.name + "\" from \"" + this.from.name + "\", and " + this.result.state + 
-                        " with " + this.armies.toString() + " armies.");
-            };
-
-            game.historic.push(h);
-            console.log(h.toString());
-
-            cf(game, result);
+        h.toString = function (){
+            return ("Player \"" + this.p.name + "\" attacked \"" + this.target.name + 
+                    "\" of \"" + this.d.name + "\" from \"" + this.from.name + "\", and " + this.result.state + 
+                    " with " + this.armies.toString() + " armies.");
         };
 
         if (armiesNumber > 3 || armiesNumber > (fromTerritory.armies.length - 1)) {
             result.state = 'invalid';
-            callbackFunction(game, result);
+            console.log("Called attack with invalid params !");
+            callbackFunction(this.game, result);
             return;
         }
-        
 
         var defenseNumber = targetTerritory.armies.length;
 
@@ -147,26 +142,30 @@
             var moveNumber = armiesNumber - loses.length;
             var army;
             var movingArmies = [];
-            var movable = fromTerritory.armies.filter(function(){
-                return true;
-            });
+            var movable = Array.copy(fromTerritory.armies);
 
             for(var i = 0; i < moveNumber; i++) 
                 movingArmies.push(movable.pop());
 
-            this._placeArmiesFromTo(fromTerritory, targetTerritory, movingArmies);            
+            this._placeArmiesFromTo(movingArmies, targetTerritory);            
         }
-
-        for(var i in wins)
-            Array.removeItem(wins[i], defensePlayer.armies);
-
-        for(var i in loses)
-            Array.removeItem(loses[i], player.armies);
 
         var allDowns = [].concat(wins).concat(loses);
 
         for(var i in allDowns)
-            this.game.removeArmy(allDowns[i]);
+            this._destroyArmy(allDowns[i]);
+
+        this.game.historic[that.turnCount].push(h);
+        console.log(h.toString());
+
+        // eval winner
+        if (this.goalService.evalOnAttack(player, defensePlayer, h)) {
+            this._gameEnded();
+        };
+
+        if (defensePlayer.armies.length == 0) {
+            defensePlayer.destroyed = true;
+        }
 
         callbackFunction(this.game, result);
     };
@@ -191,26 +190,7 @@
 
         var movable = this.getMovableArmiesOf(player, fromTerritory);
 
-        var cf = callbackFunction;
-        callbackFunction = function(game, result){
-
-            var h = {
-                p : player,
-                f : fromTerritory,
-                t : toTerritory,
-                n : numberOfArmies,
-            };
-
-            h.toString = function(){
-                return "The player \"" + this.p.name + "\" moved " + this.n.toString() + " from \"" + 
-                        this.f.name + "\" to \"" + this.t.name + "\".";
-            };
-
-            game.historic.push(h);
-            console.log(h.toString());
-
-            cf(game, result);
-        };
+        var that = this;
 
         if (movable.length < numberOfArmies) {
             result.message = "The territory has not this much armies to move !";
@@ -223,7 +203,27 @@
             for(var i in moving)
                 this.movedArmies.push(moving[i]);
 
-            this._placeArmiesFromTo(fromTerritory, toTerritory, moving);            
+            this._placeArmiesFromTo(moving, toTerritory);            
+        }
+
+        var h = {
+            p : player,
+            f : fromTerritory,
+            t : toTerritory,
+            n : numberOfArmies,
+        };
+
+        h.toString = function(){
+            return "Player \"" + this.p.name + "\" moved " + this.n.toString() + " from \"" + 
+                    this.f.name + "\" to \"" + this.t.name + "\".";
+        };
+
+        this.game.historic[that.turnCount].push(h);
+        console.log(h.toString());
+
+        // eval a winner
+        if (this.goalService.evalOnMove(player, h)) {
+            this._gameEnded();
         }
 
         callbackFunction(this.game, result);
@@ -233,44 +233,65 @@
      * End the player turn of moviments
      **/
     GameServiceLocal.prototype.endMovimentTurn = function(player, callbackFunction){
-        if (this._evalGoalReached(player)) {
-            for(var i in this.callbacks)
-                this.callbacks[i](game);
+        this._setCallbackOfPlayer(this.game.currentPlayer, callbackFunction);
+        
+        if (this.game.completed) {
+            this._gameEnded();
             return;
         }
 
-        this._setCallbackOfPlayer(this.game.currentPlayer, callbackFunction);
         this.game.currentPlayer = this._nextPlayer();
 
         if (this.game.currentPlayer == null) {
             this.game.state = App.Models.Game.States.Placement;
             this.game.currentPlayer = this.game.players[0];
+
+            while (this.game.currentPlayer.destroyed) {
+                this.game.currentPlayer = this._nextPlayer();
+            }
+
+            this._createNewArmies(); // give new armies to everyone
+
+            this.turnCount = this.game.historic.length;
+            this.game.historic.push([]);
         }
 
-        this._cleanTurn();
+        this._endPlayerTurn();
         this._getCallbackOfPlayer(this.game.currentPlayer)(this.game);
+    };
+
+    GameServiceLocal.prototype.getNewArmiesForPlayer = function(player){
+        var armies = player.armies.filter(function(a) {
+            return a.territory == null;
+        });
+
+        return armies;
     };
 
     /**
      * End the player turn and call for the others... 
      **/
     GameServiceLocal.prototype.endPlaceTurn = function(player, callbackFunction){
+        this._setCallbackOfPlayer(this.game.currentPlayer, callbackFunction);
 
-        if (this._evalGoalReached(player)) {
-            for(var i in this.callbacks)
-                this.callbacks[i](game);
+        this.goalService.evalOnEndOfPlacement(player);
+
+        if (this.game.completed) {
+            this._gameEnded();
             return;
         }
 
-        this._setCallbackOfPlayer(this.game.currentPlayer, callbackFunction);
         this.game.currentPlayer = this._nextPlayer();
 
         if (this.game.currentPlayer == null) {
             this.game.state = App.Models.Game.States.Attacking;
             this.game.currentPlayer = this.game.players[0];
+                    
+            this.turnCount = this.game.historic.length;
+            this.game.historic.push([]);
         }
 
-        this._cleanTurn();
+        this._endPlayerTurn();
         this._getCallbackOfPlayer(this.game.currentPlayer)(this.game);
     };
 
@@ -288,9 +309,15 @@
 
         this.game.state = App.Models.Game.States.Placement;
 
+        /*
         this.game.players.push(this._createPlayer("Real Person", colors, goals));
         this.game.players.push(this._createPlayer("AI 1", colors, goals));
         this.game.players.push(this._createPlayer("AI 2", colors, goals));
+        */
+
+        this.game.players.push(this._createPlayer("Real Person", ["Black"], [goals[6]]));
+        this.game.players.push(this._createPlayer("AI 1", ["Red"], [goals[7]]));
+        this.game.players.push(this._createPlayer("AI 2", ["Blue"], [goals[1]]));
 
         for(var i in this.game.players) {
             this._setCallbackOfPlayer(this.game.players[i], function(game){
@@ -315,8 +342,11 @@
             this._evalFailedGoals(this.game.players[i]);
         }
 
+        this._createNewArmies(); // give new armies for the players
+
         // register and return
         this.history.push(this.game);
+        this.game.historic[this.turnCount] = [];
         callbackFunction(this.game);
     };
     
@@ -334,26 +364,44 @@
     
     // internal
 
-    GameServiceLocal.prototype._placeArmiesFromTo = function (fromTerritory, toTerritory, armiesToMove){
+    GameServiceLocal.prototype._gameEnded = function () {
+        for(var p in this.game.players) {
+            this._getCallbackOfPlayer(this.game.players[p])(this.game);
+        }
+    };
+
+    GameServiceLocal.prototype._destroyArmy = function (army){
+        Array.removeItem(army, army.territory.armies);
+        Array.removeItem(army, army.player.armies);
+        this.game.removeArmy(army);
+    };
+
+    GameServiceLocal.prototype._placeArmiesFromTo = function (armies, toTerritory){
         var army;
-        while(army = armiesToMove.pop()) {
-            Array.remove(army, fromTerritory.armies);
+        while(army = armies.pop()) {
+            if (army.territory != undefined)
+                Array.removeItem(army, army.territory.armies);
+
             army.territory = toTerritory;
             toTerritory.armies.push(army);
         }
     }
 
-    GameServiceLocal.prototype._cleanTurn = function(){
-        this.currentPlayer = null;
+    GameServiceLocal.prototype._endPlayerTurn = function(){
         while(this.movedArmies.pop()); // clean the array
     };
 
     GameServiceLocal.prototype._nextPlayer = function(){
         var index = this.game.players.indexOf(this.game.currentPlayer) + 1;
 
-        if (index < this.game.players.length)
-            return this.game.players[index];
-        else
+        if (index < this.game.players.length && index != -1) {
+            var player =  this.game.players[index];
+
+            if(player.destroyed)
+                return this._nextPlayer();
+            else
+                return player;
+        } else
             return undefined;
     };
 
@@ -369,22 +417,32 @@
         this.goalService.evalFailedGoals(player);
     };
 
-    GameServiceLocal.prototype._evalGoalReached = function(player){
-        return this.goalService.evalGoalReached(player);
-    };
-
     GameServiceLocal.prototype._getRandom = function (max) {
         return Math.floor((Math.random() * max));
     };
 
     // create helpers
 
+    GameServiceLocal.prototype._createNewArmies = function (){
+        var number = 0;
+        for (var p in this.game.players) {
+            if (this.game.players[p].destroyed == false) {
+                number = Math.floor( this.game.players[p].territories.length / 2.0 );
+                if (number < 3)
+                    number = 3;
+                for(var i = 0; i < number; i++)
+                    this._createArmy(this.game.players[p]);
+            }
+        }
+    };
+
     GameServiceLocal.prototype._createArmy = function(player, territory){
         var army = new App.Models.Army(uuid.v1(), player);
-        army.territory = territory;
 
-        if (territory)
+        if (territory) {
+            army.territory = territory;
             territory.armies.push(army);
+        }
         
         this.game.addArmy(army);
         return army;

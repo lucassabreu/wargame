@@ -23,13 +23,16 @@
         player : null,
         armies : [],
         winner : null,
-        completed : false,
         state : null,
 
         historic : [],
 
         _armies : {},
     };
+
+    Game.prototype.__defineGetter__ ('completed', function(){
+        return this.state == Game.States.Ended;
+    });
 
     Game.prototype.getArmy = function(armyId){
         if (this._armies.hasOwnProperty(armyId))
@@ -47,7 +50,7 @@
 
     Game.prototype.removeArmy = function(army){
         this._armies[army.id] = undefined;
-        this.armies = this.armies.filter(function(a) { return a != army; });
+        Array.removeItem(army, this.armies);
     };
 
     App.Models.Game = Game;

@@ -14,7 +14,10 @@ Array.remove = function(index, array){
 };
 
 Array.removeItem = function(item, array){
-    return array.splice(array.indexOf(item), 1)[0];
+    var index = array.indexOf(item);
+    if (index == -1)
+        return item;
+    return array.splice(index, 1)[0];
 };
 
 Array.has = function(array, item){

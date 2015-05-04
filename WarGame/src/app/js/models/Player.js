@@ -10,6 +10,7 @@
         armyColor : '',
         _goalCard : null,
         armies : [],
+        destroyed : false,
         real : false,
     };
     

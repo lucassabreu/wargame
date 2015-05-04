@@ -24,17 +24,18 @@
 
     <div class="map-container">
         <ul class="controls turn">
-            <li><a class="btn-show-card" ng-click="showCard()">Show Card</a></li>
             <li><a class="btn-attack" ng-click="toogleAttack()">Attack</a></li>
             <li><a class="btn-move" ng-click="toogleMove()">Move Army</a></li>
             <li><a class="btn-end-turn" ng-click="endTurn()">End Turn</a></li>
             <li><a class="btn-cancel" ng-click="cancel()" disabled>Cancel</a></li>
         </ul>
         <ul class="controls place-turn">
-            <li><a class="btn-show-card" ng-click="showCard(player)">Show Card</a></li>
             <li><a class="btn-place-army" ng-click="placeArmy()">Place Army!</a></li>
             <li><a class="btn-done" ng-click="placeTurnDone()" disabled>Done!</a></li>
         </ul>
+        <div class="game-ended">
+            The game is over ! The winner is <b>{{game.winner.name}}</b> ! <a href="#/">Restart?</a>
+        </div>
         <div class="svg-container" id="svgContainer"></div>
         <div class="messages">No messages...</div>
     </div>

@@ -25,6 +25,8 @@
     });
 
     Territory.prototype.__defineGetter__('armyColor', function(){
+        if (this.occupiedBy == undefined)
+            return undefined;
         return this.occupiedBy.armyColor;
     });
 

@@ -71,7 +71,9 @@
             $scope.attackResultDialog = angular.element(".play-map-container .attack-result");
             $scope.attackDialog = angular.element(".play-map-container .attack");
             $scope.movingDialog = angular.element(".play-map-container .moving");
+            $scope.gameEndedMessage = angular.element(".play-map-container .game-ended");
 
+            $scope.gameEndedMessage.hide();
             $scope.attackResultDialog.hide();
             $scope.attackDialog.hide();
             $scope.movingDialog.hide();
@@ -150,6 +152,11 @@
                         $scope.resetTurnControls();
                         $scope.turnControls.moveButton.text("Move Army");
                         $scope.mapView.endMoving();
+
+                        if (game.completed) {
+                            $scope.endGame(game);
+                            return;
+                        }
                     }
                 );
 
@@ -212,7 +219,12 @@
 
                         $scope.resetTurnControls();
                         $scope.turnControls.attackButton.text("Attack");
-                        $scope.mapView.endAttack();                      
+                        $scope.mapView.endAttack();    
+
+                        if (game.completed) {
+                            $scope.endGame(game);
+                            return;                  
+                        }
                     }
                 );
             };
@@ -229,7 +241,6 @@
                 var army = $scope.newArmies.pop();
                 gameService.placeArmyAt($scope.player, army, $scope.mapView.activeTerritory);
                 $scope.mapView.placeArmyAt(army, $scope.mapView.activeTerritory);
-
 
                 if ($scope.newArmies.length == 0) {
                     $scope.placeTurnControls.doneButton.attr('disabled', false);
@@ -277,11 +288,29 @@
 
             // methods
 
+            $scope.endGame = function(game) {
+                $scope.gameEndedMessage.show();
+                $scope.showMessage($scope.gameEndedMessage.html());
+
+                // hide everything
+                $scope.attackResultDialog.hide();
+                $scope.attackDialog.hide();
+                $scope.movingDialog.hide();
+                $scope.goalCardDialog.hide();
+                $scope.waitDialog.hide();
+                $scope.turnControls.controls.hide();
+            };
+
             $scope.startPlaceTurn = function(game){
                 $scope.waitDialog.hide();
 
                 $scope.moved = false;
                 $scope.updateGameStatus(game);
+
+                if (game.completed) {
+                    $scope.endGame(game);
+                    return;
+                }
 
                 $scope.resetPlaceTurnControls();
 
@@ -300,6 +329,11 @@
 
                 $scope.moved = false;
                 $scope.updateGameStatus(game);
+
+                if (game.completed) {
+                    $scope.endGame(game);
+                    return;
+                }
 
                 $scope.placeTurnControls.controls.hide();
                 $scope.turnControls.controls.show();
