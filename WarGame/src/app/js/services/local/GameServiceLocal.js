@@ -309,15 +309,15 @@
 
         this.game.state = App.Models.Game.States.Placement;
 
-        /*
         this.game.players.push(this._createPlayer("Real Person", colors, goals));
         this.game.players.push(this._createPlayer("AI 1", colors, goals));
         this.game.players.push(this._createPlayer("AI 2", colors, goals));
-        */
 
+        /*
         this.game.players.push(this._createPlayer("Real Person", ["Black"], [goals[6]]));
         this.game.players.push(this._createPlayer("AI 1", ["Red"], [goals[7]]));
         this.game.players.push(this._createPlayer("AI 2", ["Blue"], [goals[1]]));
+        */
 
         for(var i in this.game.players) {
             this._setCallbackOfPlayer(this.game.players[i], function(game){
