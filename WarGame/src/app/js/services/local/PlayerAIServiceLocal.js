@@ -178,7 +178,7 @@
 
                 var minArmy;
 
-                if (player.territories.length >= goals[i].quantity)
+                if (player.territories.length >= goal.quantity)
                     minArmy = goal.armyAtEachOne;
                 else {
                     minArmy = 1;
