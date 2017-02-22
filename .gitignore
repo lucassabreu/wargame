@@ -11,3 +11,5 @@ WarGame/.ntvs_analysis.dat
 WarGame/.ntvs_analysis.dat.tmp
 *.njsproj
 *.suo
+src/app/3d-party
+
